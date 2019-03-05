@@ -1,0 +1,2408 @@
+{
+  "info": {
+    "_postman_id": "728633b2-091c-4fac-8daa-837a56c94eb5",
+    "name": "API Reference",
+    "description": "This API Reference is designed to guide the nanopay integrator to use the **nanopay API** and act on the backend endpoints because they want to:\n\n1. Automate functionality and filters.\n2. Create new interfaces.\n3. Create new functionality.\n4. Edit data directly in the backend.\n \nThis API Reference is focused on the following most common subjects of use for the **nanopay API**:\n\n1. User\n2. Business\n3. Account\n4. Partner\n5. Invoice\n\n#### **Data Access Objects (DAOs)**\nIt is important to note a key feature, and its functions, in the technology used in the **nanopay API**. A Data Access Object (DAO) is a generic interface for a collection of objects. The DAO interface supports fetching and deleting many rows (select, removeAll), fetching and deleting single rows (find, remove) and inserts (put). The interface also includes a rich and extensible query language for filtering, sorting and aggregation.\n\nDAOs are the primary way that records are accessed through the API. The Digital Integration Gateway (DIG) is a web endpoint that receives requests for DAO actions and supports all DAO operations.\n\n#### **Services**\nServices provide custom functionality and are a secondary way that users will interact with the API when that is not possible through DAOs. They are accessible through the Service Unified GAteway Relay (SUGAR) endpoint.  The SUGAR endpoint performs non-DAO operations against a web service.\n\n\n#### **API Environments**\nThere are two separate external environments that exist to support the **nanopay API**. One is the live production system which provides full functionality. The other one is User Acceptance Testing (**UAT**) which does not affect live data or interact with the banking networks. Separate API keys are used to authenticate the request for each environment.\n\n#### **API Request Formats**\nThe nanopay API supports multiple input formats for requesting data, including:\n1. JSON\n2. XML\n3. CSV\n\n\n",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "1cb87838-9f3e-4e45-b2df-66a810cbe066",
+      "name": "Authentication",
+      "description": "Authentication is how the client proves its identity to the server.  \n\nThe nanopay API uses three methods for authentication:\n\n1. Username and Password Authentication\n2. API Key and Secret Authentication\n3. Session ID Authentication\n\n**HTTPS and TLS Encryption:**\n* All API requests must be made over a secure TLS channel such as an HTTPS session. \n* Calls made over plain HTTP will fail. \n* API requests without authentication will also fail.",
+      "item": [
+        {
+          "_postman_id": "df14cc99-939f-48a4-9e93-db23e1f850ad",
+          "name": "Username and Password Authentication",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "30a556b6-e0b7-4dad-aa24-25c67a13e189",
+                "exec": [
+                  "// Set the session ID",
+                  "console.log(\"setting session ID to: \" + postman.getResponseCookie(\"sessionId\").value);",
+                  "pm.environment.set(\"session_id\", postman.getResponseCookie(\"sessionId\").value);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b508dddc-3984-42bd-8a39-24f4445de642",
+                "exec": [
+                  "pm.cookies.clear();",
+                  "",
+                  "// Set a random email address to create",
+                  "let emailAddress = \"initial\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\";",
+                  "pm.environment.set(\"email\", emailAddress);",
+                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
+                  "pm.environment.set(\"password\", password);",
+                  "",
+                  "console.log(pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json');",
+                  "",
+                  "let developerAuthString = pm.environment.get(\"developer_email\") + \":\" + pm.environment.get(\"developer_password\");",
+                  "const developerEncoding = CryptoJS.enc.Utf8.parse(developerAuthString);",
+                  "const developerBase64 = CryptoJS.enc.Base64.stringify(developerEncoding);",
+                  "",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json',",
+                  "    method: 'POST',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + developerBase64,",
+                  "              'content-type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({ firstName: \"initialFirstName\", lastName: \"initialLastName\", email: pm.environment.get(\"email\"), desiredPassword: pm.environment.get(\"password\"), organization: \"initialOrganization\" } )",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    pm.environment.set(\"id\", res.json().id);",
+                  "    console.log(\"Email: \" + pm.environment.get(\"email\"));",
+                  "    console.log(\"User ID: \" + pm.environment.get(\"id\"));",
+                  "    ",
+                  "    let authString = pm.environment.get(\"email\") + \":\" + pm.environment.get(\"password\");",
+                  "    console.log(\"Auth String: \" + authString);",
+                  "    const encoding = CryptoJS.enc.Utf8.parse(authString);",
+                  "    const base64 = CryptoJS.enc.Base64.stringify(encoding);",
+                  "    pm.environment.set(\"authorization\", base64);",
+                  "    console.log(\"Base64 Encoding: \" + base64);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "description": "Base64 encoding of user name and password required by basic authentication.",
+                "key": "Authorization",
+                "type": "text",
+                "value": "Basic {{authorization}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{url}}/service/dig",
+            "description": "## **Username and Password Authentication** \nThe nanopay API uses Basic Authentication with username and password to authenticate requests. This is the simplest form of authentication and should not be used for advanced applications."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "05aae7bf-c9b0-4aca-bfac-ddc7fed21392",
+          "name": "API Key and Secret Authentication",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authorization}}",
+                "description": "Base64 encoding of API key and secrets  required by basic authentication.",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{url}}/service/dig",
+            "description": "## **API Key and Secret Authentication** \nThe nanopay API uses Basic Authentication with API keys and secrets to authenticate requests. The API keys can be viewed and managed in the Personal Settings of the user.\n\n**IMPORTANT NOTES:**\n\n* **SECURE THE API KEYS**, as they carry the same privileges as the user that they were created for, and therefore must be secured to prevent inadvertant or malicious actions.\n\n* **DO NOT SHARE** your secret API keys in publicly accessible areas such as GitHub, client-side code and so forth."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "61ee016d-9a34-4a56-a033-2ab09ac535ba",
+          "name": "Session ID Authentication",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "62f31f38-1574-47fd-88ad-1e200b1ad904",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "sessionId={{session_id}}",
+                "description": "Represents a login session.",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{url}}/service/dig",
+            "description": "## **Session ID Authentication** \nOnce a request has been made with a valid set of login credentials, either username/password or key/secret, a session is created and the session ID can be used to authenticate future requests in the given session. To use the session ID, retrieve it from a previously successful request and put it into the cookie of any subsequent requests."
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "f5dea896-452b-49ac-bed3-293ae0d100c3",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "98e08ea4-ccc8-48c9-8d20-2309fb06519d",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "a31ba738-2498-48d0-a188-b202164e8b15",
+      "name": "User",
+      "description": "The user represents a person and the user object represents that person's ability to log into and use  the system as well as act on behalf of other users or businesses, if permitted.  \n",
+      "item": [
+        {
+          "_postman_id": "11150963-47fb-4388-8dfa-5a7428380695",
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "aedb3863-2e58-483d-8bb7-e842a6b01ce8",
+                "exec": [
+                  "// Set a random email address to create",
+                  "let emailAddress = \"ablii\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\"",
+                  "pm.environment.set(\"user_email\", emailAddress);",
+                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
+                  "pm.environment.set(\"user_password\", password);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f326459b-ba2c-437e-b97b-bdb155862a06",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "console.log(\"Created user with ID: \" + jsonData.id)",
+                  "pm.environment.set(\"user_id\", jsonData.id);",
+                  "",
+                  "// retrieve business ID here instead of later on",
+                  "let authString = pm.environment.get(\"user_email\") + \":\" + pm.environment.get(\"user_password\");",
+                  "console.log(\"Auth String: \" + authString);",
+                  "const encoding = CryptoJS.enc.Utf8.parse(authString);",
+                  "const base64 = CryptoJS.enc.Base64.stringify(encoding);",
+                  "    ",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=select&format=json&q=email=' + pm.environment.get(\"user_email\") + '%20AND%type:Business',",
+                  "    method: 'GET',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + base64,",
+                  "              'content-type': 'application/json'",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    pm.environment.set(\"user_business_id\", res.json()[0].id);",
+                  "    console.log(\"User Business ID: \" + pm.environment.get(\"user_business_id\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"abliiFirstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"abliiLastName\",\n    \"email\": \"{{user_email}}\",\n    \"desiredPassword\": \"{{user_password}}\",\n    \"organization\": \"abliiOrganization\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "smeBusinessRegistrationDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Create User - Register Ablii**\n\nCreates a user object in Ablii.\n\n**Note:** \n1. Creating a user object in Ablii also creates a Business object for the user. The \u2018organization\u2019 is used as the business name and all the user data is copied over to the business as well.\n2. Email verification will be prompted after the object is created.\n\n| Body Parameters | Description |\n| ---- | ---- |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address of the entity. |\n| **desiredPassword** | The password entered by the entity. |\n| **organization** | The company or business name with which the entity wishes to be associated. |\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "57fe795a-4975-41d4-ba15-b19038d411f6",
+          "name": "Retrieve All Users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3e157753-186d-4356-98fb-69b8f740cfd0",
+                "exec": [
+                  "// Test for email address",
+                  "pm.test(\"Test Email Address Returned\", function () {",
+                  "    var emailAddress = pm.environment.get(\"user_email\"); ",
+                  "    var jsonData = pm.response.json();",
+                  "    data = jsonData.filter(function (d) {",
+                  "      return (d.email === emailAddress);",
+                  "    });",
+                  "    console.log(\"Found \" + data.length + \" users with \" + data[0].email + \" email address\");",
+                  "    pm.expect(data[0].email).to.eql(emailAddress);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=type:User",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "userDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "q",
+                  "value": "type:User",
+                  "equals": true,
+                  "description": "The query parameter for retrieval requests."
+                }
+              ]
+            },
+            "description": "## **Retrieve All Users**\n\nQueries the server to retrieve all users from within the system to which the user has access. This will be restricted to \u2018user\u2019 objects through a [query parameter](https://nanopay.postman.co/collections/5612686-728633b2-091c-4fac-8daa-837a56c94eb5?workspace=3a59dfdf-e491-4d2b-9879-375b7278914f#6fa49f76-2614-4ce0-9d14-d8e95d0a518f).\n\n"
+          },
+          "response": [
+            {
+              "id": "709d6159-be85-4bd4-ac48-2d168cd4b558",
+              "name": "Query All Users",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "service",
+                    "dig"
+                  ],
+                  "query": [
+                    {
+                      "key": "dao",
+                      "value": "userDAO",
+                      "equals": true
+                    },
+                    {
+                      "key": "cmd",
+                      "value": "select",
+                      "equals": true
+                    },
+                    {
+                      "key": "format",
+                      "value": "json",
+                      "equals": true
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Wed, 20 Feb 2019 13:34:13 GMT"
+                },
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'none'; child-src 'self'; worker-src 'self'; connect-src 'self' data: blob: filesystem: ws:; script-src 'self' https://cdn.plaid.com/link/v2/stable/link-initialize.js 'unsafe-eval' 'sha256-HY1JzEwuxkis4xx0ggY23gbYY/MCEAE1T6+OQnWS2vA=' 'sha256-NiNrLgJ8wbIXIi5saiR3XTd1Mxm4k0nju66GJsw4b9U=' 'sha256-FLYDXBkz4oo/H5jEfYXqAGYUwERY44OO1yznaMCdMiU=' 'sha256-G3UfiJBy6rwOk3glkBQuQDFA7IoCtiOT56gTh+IfNF0='; style-src 'self' https://fonts.googleapis.com/css https://fonts.googleapis.com/icon data: chrome-extension-resource: 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com data: chrome-extension-resource:; img-src 'self' data: blob: filesystem:; media-src * data: blob: filesystem:; object-src 'self' data: blob: filesystem:; frame-src 'self' https://cdn.plaid.com/link/ nanopay.net nanopay.net data: chrome-extension-resource:; report-uri /service/CSPReportWebAgent;"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json;charset=utf-8"
+                },
+                {
+                  "key": "Set-Cookie",
+                  "value": "sessionId=a2e09fd5-e8c2-4489-aa07-bb9402778db1"
+                },
+                {
+                  "key": "Expires",
+                  "value": "Thu, 01 Jan 1970 00:00:00 GMT"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "[\n    {\n        \"class\": \"foam.nanos.auth.User\",\n        \"id\": 1010,\n        \"enabled\": true,\n        \"loginEnabled\": true,\n        \"firstName\": \"Portal\",\n        \"middleName\": \"\",\n        \"lastName\": \"Developer\",\n        \"organization\": \"\",\n        \"department\": \"\",\n        \"email\": \"developer@nanopay.net\",\n        \"emailVerified\": true,\n        \"phone\": {\n            \"class\": \"foam.nanos.auth.Phone\",\n            \"verified\": true,\n            \"number\": \"+11111111111\"\n        },\n        \"mobile\": {\n            \"class\": \"foam.nanos.auth.Phone\",\n            \"verified\": false,\n            \"number\": \"\"\n        },\n        \"type\": \"User\",\n        \"address\": {\n            \"class\": \"foam.nanos.auth.Address\",\n            \"type\": \"\",\n            \"verified\": false,\n            \"deleted\": false,\n            \"structured\": true,\n            \"address1\": \"\",\n            \"countryId\": \"TT\",\n            \"regionId\": \"AB\",\n            \"streetNumber\": \"\",\n            \"streetName\": \"\",\n            \"suite\": \"\",\n            \"city\": \"\",\n            \"postalCode\": \"\",\n            \"encrypted\": false,\n            \"latitude\": 35.526180267333984,\n            \"longitude\": -78.3620681762695,\n        },\n        \"language\": \"en\",\n        \"timeZone\": \"\",\n        \"desiredPassword\": \"\",\n        \"passwordLastModified\": \"2017-11-13T18:47:01.240Z\",\n        \"note\": \"\",\n        \"businessName\": \"\",\n        \"bankIdentificationCode\": \"\",\n        \"businessHoursEnabled\": false,\n        \"website\": \"\",\n        \"system\": false,\n        \"integrationCode\": 0,\n        \"hasIntegrated\": false,\n        \"loginAttempts\": 0,\n        \"isPublic\": true,\n        \"nextLoginAttemptAllowedAt\": \"2019-02-15T16:34:46.017Z\",\n        \"ownershipPercent\": 0,\n        \"businessTypeId\": 0,\n        \"businessSectorId\": 1,\n        \"invited\": false,\n        \"invitedBy\": 0,\n        \"previousStatus\": 0,\n        \"status\": 2,\n        \"compliance\": 1,\n        \"jobTitle\": \"\",\n        \"principleType\": \"\",\n        \"welcomeEmailSent\": false,\n        \"portalAdminCreated\": false,\n        \"businessRegistrationNumber\": \"\",\n        \"businessRegistrationAuthority\": \"\",\n        \"onboarded\": true,\n        \"createdPwd\": false,\n        \"inviteAttempts\": 0,\n        \"operatingBusinessName\": \"\",\n        \"holdingCompany\": false,\n        \"thirdParty\": false,\n        \"PEPHIORelated\": false,\n        \"targetCustomers\": \"\",\n        \"sourceOfFunds\": \"\",\n        \"taxIdentificationNumber\": \"\",\n        \"deviceToken\": \"\",\n        \"twoFactorEnabled\": false,\n        \"lastModifiedBy\": 0,\n        \"createdBy\": 0,\n    }\n]"
+            }
+          ]
+        },
+        {
+          "_postman_id": "292e2d77-43c6-4289-84db-bf0aabe41318",
+          "name": "Retrieve Current User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "70d9ce20-920b-43f5-b6d7-f185d9b4b8eb",
+                "exec": [
+                  "// Test for email address",
+                  "pm.test(\"Test Email Address Returned\", function () {",
+                  "    var emailAddress = pm.environment.get(\"user_email\"); ",
+                  "    var jsonData = pm.response.json();",
+                  "    data = jsonData.filter(function (d) {",
+                  "      return (d.email === emailAddress);",
+                  "    });",
+                  "    console.log(\"Found \" + data.length + \" users with \" + data[0].email + \" email address\");",
+                  "    pm.expect(data[0].email).to.eql(emailAddress);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=email={{user_email}}%20AND%type:User",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "userDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "q",
+                  "value": "email={{user_email}}%20AND%type:User",
+                  "equals": true,
+                  "description": "The query parameter for retrieval requests."
+                }
+              ]
+            },
+            "description": "## **Retrieve Current User**\n\nQueries the server to retrieve a user from the current set of users.\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "88b1a442-75a6-482b-a968-31399b077cec",
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e6c28186-a52e-4842-a878-295c12474e2f",
+                "exec": [
+                  "// Change the middle name to something random"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "0c4863a9-b502-4e7c-92ec-b57004f09f56",
+                "exec": [
+                  "// Check to see that the middle name was updated properly"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": {{user_id}},\n    \"enabled\": true,\n    \"firstName\": \"updatedFirstName\",\n    \"middleName\": \"updatedMiddleName\",\n    \"lastName\": \"updatedLastName\",\n    \"organization\": \"abliiOrganization\",\n    \"department\": \"\",\n    \"email\": \"{{user_email}}\",\n    \"emailVerified\": false,\n    \"phone\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"mobile\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"type\": \"User\",\n    \"address\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"BR\",\n        \"regionId\": \"\",\n        \"streetNumber\": \"\",\n        \"streetName\": \"\",\n        \"suite\": \"\",\n        \"city\": \"\",\n        \"postalCode\": \"\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"language\": \"\",\n    \"timeZone\": \"\",\n    \"passwordLastModified\": \"2019-02-28T19:18:46.183Z\",\n    \"note\": \"\",\n    \"businessName\": \"\",\n    \"bankIdentificationCode\": \"\",\n    \"businessHoursEnabled\": false,\n    \"website\": \"\",\n    \"loginAttempts\": 0,\n    \"isPublic\": true,\n    \"nextLoginAttemptAllowedAt\": \"2019-02-26T16:21:41.579Z\",\n    \"ownershipPercent\": 0,\n    \"businessTypeId\": 4,\n    \"businessSectorId\": 33792,\n    \"invited\": false,\n    \"invitedBy\": 0,\n    \"jobTitle\": \"\",\n    \"principleType\": \"\",\n    \"businessPhone\": {\n        \"verified\": false,\n        \"number\": \"647-444-5555\"\n    },\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"PEPHIORelated\": false,\n    \"signingOfficer\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\",\n    \"signUpToken\": \"5678\",\n    \"deviceToken\": \"5678\",\n    \"twoFactorEnabled\": false\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=userDAO&cmd=put&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "userDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Update User**\n\nUpdates a user object by setting the values of the parameters passed. Any parameters not provided are left unchanged. \n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of user. |\n| **id** | A unique ID for the entity. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address associated with the entity.|\n| **language** | The preferred language of the entity. |\n| **timeZone** | The time zone of the entity. |\n| **note** | \u2026 |\n| **businessName** | A section allocated for information related to the business. |\n| **bankIdentificationCode** | \u2026 |\n| **businessHoursEnabled** | \u2026 |\n| **website** | The website of the entity. |\n| **integrationCode** | \u2026 |\n| **hasIntegrated** | \u2026 |\n| **loginAttempts** | \u2026 |\n| **isPublic** | \u2026 |\n| **nextLoginAttemptAllowedAt** | \u2026 |\n| **ownershipPercent** | A percentage value indicating how much of the organization is owned by the entity. |\n| **businessTypeId** | A unique ID for the business type. |\n| **businessSectorId** | A unique ID for the business sector. |\n| **invited** | \u2026 |\n| **invitedBy** | \u2026 |\n| **previousStatus** | \u2026 |\n| **jobTitle** | The job title of the entity. |\n| **principleType** | The type of principal owner associated with the organization. |\n| **welcomeEmailSent** | \u2026 |\n| **portalAdminCreated** | \u2026 |\n| **businessRegistrationNumber** | \u2026 |\n| **businessRegistrationAuthority** | \u2026 |\n| **onboarded** | \u2026 |\n| **createdPwd** | \u2026 |\n| **inviteAttempts** | \u2026 |\n| **operatingBusinessName** | \u2026 |\n| **holdingCompany** | \u2026 |\n| **thirdParty** | \u2026 |\n| **PEPHIORelated** | \u2026 |\n| **signingOfficer** | \u2026 |\n| **targetCustomers** | Defines the type of clients for the organization. |\n| **sourceOfFunds** | Where the organization receives its funds. |\n| **taxIdentificationNumber** | \u2026 |\n| **signUpToken** | \u2026 |\n| **deviceToken** | \u2026 |\n| **twoFactorEnabled** | \u2026 |\n| **lastModified** | The timestamp of when the account was last modified in the system. |\n| **createdBy** | The ID of the entity who created this business. |\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "3b69efbd-bfd6-4a06-b285-892810aac5d7",
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f29d6886-1928-4204-abf4-2bf30f9ae4a9",
+                "exec": [
+                  "// Check to see that the response contains 'success'"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "0c0a4951-8883-435e-b4f5-7e937a131853",
+                "exec": [
+                  "// Set a random email address to create",
+                  "let emailAddress = \"todelete\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\";",
+                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
+                  "",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json',",
+                  "    method: 'POST',",
+                  "    header: {",
+                  "        'authorization': 'Basic ' + pm.environment.get(\"authorization\"),",
+                  "        'content-type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({ firstName: \"toDeleteFirstName\", lastName: \"toDeleteLastName\", email: emailAddress, desiredPassword: password, organization: \"toDeleteOrganization\" } )",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    pm.environment.set(\"user_id_to_delete\", res.json().id);",
+                  "    console.log(\"Create User \" + pm.environment.get(\"user_id_to_delete\") + \" to delete...\");",
+                  "    ",
+                  "    // retrieve business ID to delete",
+                  "    let authString = emailAddress + \":\" + password;",
+                  "    console.log(\"Auth String: \" + authString);",
+                  "    const encoding = CryptoJS.enc.Utf8.parse(authString);",
+                  "    const base64 = CryptoJS.enc.Base64.stringify(encoding);",
+                  "    ",
+                  "    pm.sendRequest({",
+                  "        url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=select&format=json&q=email=' + emailAddress,",
+                  "        method: 'GET',",
+                  "        header: {",
+                  "                  'authorization': 'Basic ' + base64,",
+                  "                  'content-type': 'application/json'",
+                  "        }",
+                  "    }, function (err01, res01) {",
+                  "        pm.environment.set(\"business_id_to_delete\", res01.json()[0].id);",
+                  "        console.log(\"Business ID to Delete: \" + pm.environment.get(\"business_id_to_delete\"));",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "username": "admin@nanopay.net",
+                "password": "adminAb1"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=userDAO&cmd=remove&format=json&id={{user_id_to_delete}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "userDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "remove",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "id",
+                  "value": "{{user_id_to_delete}}",
+                  "equals": true,
+                  "description": "The ID of the entity to be deleted in the DAO."
+                }
+              ]
+            },
+            "description": "## **Delete User**\n\nDeletes a user object.\n"
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "2557d2c8-a1c1-409a-91d3-ea67c29c021b",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "a5beefb6-9c1b-4e04-8f89-43b56b23dd4d",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "293f1464-8b3b-476b-bbdf-b5280f49bb96",
+      "name": "Business",
+      "description": "A business allows many users to act on behalf of a business. The business is associated with the company name provided by the user upon creating a single user.\n\nThe business object allows business information to be updated and retrieved.  The body parameters refer to the business as the 'organization'.",
+      "item": [
+        {
+          "_postman_id": "d6c1a26e-720e-4fbf-82cf-62f23e79d7af",
+          "name": "Retrieve All Businesses",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=select&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "businessDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Retrieve All Businesses**\n\nQueries the server for a list of all businesses.\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "448cccc8-36fe-40d1-93c9-1c07bb8a762b",
+          "name": "Retrieve Current Business",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "bbc3dba0-d7f6-4875-a1f0-e005f4ea20c7",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=select&format=json&q=email={{user_email}}%20AND%type:Business",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "businessDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "q",
+                  "value": "email={{user_email}}%20AND%type:Business",
+                  "equals": true,
+                  "description": "The query parameter for retrieval requests."
+                }
+              ]
+            },
+            "description": "## **Retrieve Current Business**\n\nQueries the server for a current business.\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "abbe6143-db5b-4da7-820f-81fedd517086",
+          "name": "Update Business",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "42eef57e-7aca-4e9a-9d25-120e071787ed",
+                "exec": [
+                  "pm.cookies.clear();"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "type": "text",
+                "value": "sessionId="
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"class\": \"net.nanopay.model.Business\",\n    \"residenceOperated\": false,\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"abliiOrganization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"abliiOrganization\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"portalAdminCreated\": false,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"onboarded\": false,\n    \"createdPwd\": false,\n    \"inviteAttempts\": 0,\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"PEPHIORelated\": false,\n    \"signingOfficer\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\",\n    \"signUpToken\": \"\",\n    \"deviceToken\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=put&format=json&actAs={{user_business_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "businessDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{user_business_id}}",
+                  "equals": true,
+                  "description": "The business on behalf of which the user acts. "
+                }
+              ]
+            },
+            "description": "## **Update Business** \n\nUpdates a business object by setting the values of the parameters passed. Any parameters not provided are left unchanged. \n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of business. |\n| **loginEnabled** | \u2026 |\n| **id** | A unique ID for the entity associated with a entity. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **organization** | The company or business name with which the entity wishes to be associated. |\n| **department** | \u2026 |\n| **email** | The email address associated with the entity.|\n| **type** | The type of business. |\n| **businessName** | A section allocated for information related to the business. |\n| **bankIdentificationCode** | \u2026 |\n| **businessHoursEnabled** | \u2026 |\n| **website** | The website of the entity. |\n| **isPublic** | \u2026 |\n| **nextLoginAttemptAllowedAt** | \u2026 |\n| **ownershipPercent** | A percentage value indicating how much of the organization is owned by the entity. |\n| **businessTypeId** | A unique ID for the business type. |\n| **businessSectorId** | A unique ID for the business sector. |\n| **jobTitle** | The job title of the entity. |\n| **principleType** | The type of principal owner associated with the organization. |\n| **welcomeEmailSent** | \u2026 |\n| **portalAdminCreated** | \u2026 |\n| **businessRegistrationNumber** | \u2026 |\n| **businessRegistrationAuthority** | \u2026 |\n| **onboarded** | \u2026 |\n| **createdPwd** | \u2026 |\n| **inviteAttempts** | \u2026 |\n| **operatingBusinessName** | \u2026 |\n| **holdingCompany** | \u2026 |\n| **thirdParty** | \u2026 |\n| **PEPHIORelated** | \u2026 |\n| **signingOfficer** | \u2026 |\n| **targetCustomers** | Defines the type of clients for the organization. |\n| **sourceOfFunds** | Where the organization receives its funds. |\n| **taxIdentificationNumber** | \u2026 |\n| **signUpToken** | \u2026 |\n| **deviceToken** | \u2026 |\n| **twoFactorEnabled** | \u2026 |\n| **lastModified** | The timestamp of when the account was last modified in the system. |\n| **createdBy** | The ID of the entity who created this business. |\n| **spid** | The service provider ID. |\n| **group** | The permission group. |\n\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "8499322c-9e13-4e21-8cc6-351259d6e5f7",
+          "name": "Delete Business",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "41052218-2930-46de-b7a1-c9807ec92c8d",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "username": "admin@nanopay.net",
+                "password": "adminAb1"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080/service/dig?dao=businessDAO&cmd=remove&format=json&id={{business_id_to_delete}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "businessDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "remove",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "id",
+                  "value": "{{business_id_to_delete}}",
+                  "equals": true,
+                  "description": "The ID of the entity to be deleted in the DAO."
+                }
+              ]
+            },
+            "description": "## **Delete Business**\n\nDeletes a business (organization)."
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "5c68768e-f471-42e5-b209-4810d40ab72a",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "2b4e4c97-5a74-4544-a597-7d69facf252e",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "a35426b8-daf6-4954-8d17-3bdf01014cda",
+      "name": "Account",
+      "description": "An account object is used to create and manage a bank account.",
+      "item": [
+        {
+          "_postman_id": "348bd1c0-f12a-4aff-9818-30c0fec45521",
+          "name": "Create User Account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "33c8dd97-d43d-413f-babd-b5f99de8b734",
+                "exec": [
+                  "// Set a random email address to create",
+                  "let accountNumber = Math.floor(1000000 * Math.random())",
+                  "pm.environment.set(\"account_number\", accountNumber);",
+                  "let accountName = \"CAD Checking \" + accountNumber",
+                  "pm.environment.set(\"account_name\", accountName);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "945fe0c8-ac38-4539-af1c-9c28443e0018",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "console.log(\"Created account with ID: \" + jsonData.id)",
+                  "pm.environment.set(\"account_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 10,\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"323\",\n    \"country\": \"\",\n    \"accountNumber\": \"{{account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"integrationId\": \"\",\n    \"address\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"4\",\n        \"streetName\": \"River\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N1N1\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"bankAddress\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"enabled\": true,\n    \"name\": \"{{account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"balance\": 0,\n    \"institution\": 24,\n    \"owner\": {{user_id}}\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "accountDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Create User Account**\n\nCreates a Canadian bank account.\n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of bank account. |\n| **branch** | The branch transit number of the bank account. |\n| **branchId** | The branch transit number of the bank account. |\n| **institutionNumber** | The institution number of the created bank account. |\n| **country** | The country code of the bank account. |\n| **accountNumber** | The account number of the bank account. |\n| **status** | The status of the bank account. |\n| **denomination** | The type of currency associated with the bank account. |\n| **verificationAttempts** | The number of times it is attempted to verify ownership of the bank account. |\n| **microVerificationTimestamp** | The timestamp of when ownership of the bank account is verified. |\n| **integrationId** | The ID of the integration of the bank account with the accounting system. |\n| **address** | A section allocated to fields related to the address of the bank branch. |\n| _class_ | The class of the address. |\n| _type_ | The type of the address. |\n| _verified_ | Determines if the address is verified. |\n| _structured_ | Determines if the address is structured. |\n| _countryId_ | The ID of the country. |\n| _regionId_ | The ID of the region, province or state. |\n| _streetNumber_ | The street number of the entity's address. |\n| _streetName_ | The street name of the entity's address. |\n| _suite_ | The suite number of the entity's address. |\n| _city_ | The city of the entity's address. \n| _postalCode_ | The postal code of the entity's address. |\n| _encrypted_ | Determines if the address should be encrypted. |\n| _latitude_ | The latitude of the address. |\n| _longitude_ | The longitude of the address. |\n| **bankAddress** | A section allocated to the fields related to the bank. |\n| _class_ | The class of the address. |\n| _type_ | The type of the address. |\n| _verified_ | Determines if the address is verified. |\n| _structured_ | Determines if the address is structured. |\n| _countryId_ | The ID of the country. |\n| _regionId_ | The ID of the region, province or state. |\n| _streetNumber_ | The street number of the entity's address. |\n| _streetName_ | The street name of the entity's address. |\n| _suite_ | The suite number of the entity's address. |\n| _city_ | The city of the entity's address. \n| _postalCode_ | The postal code of the entity's address. |\n| _encrypted_ | Determines if the address should be encrypted. |\n| _latitude_ | The latitude of the address. |\n| _longitude_ | The longitude of the address. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **deleted** | Determines if the user has chosen to delete the account. |\n| **name** | The name of the account. |\n| **desc** | The description of the account. |\n| **transferIn** | Determines if an account can receive transfers. |\n| **transferOut** | Determines if an account can make transfers out. |\n| **isDefault** | Determines the default account of the entity. |\n| **balance** | The amount of funds available in the account. |\n| **created** | The timestamp of when the account was created in the system. |\n| **createdBy** | The ID of the entity who created this bank account. |\n| **lastModified** | The timestamp of when the account was last modified in the system. |\n| **lastModifiedBy** | The ID of the entity who last modified this bank account. |\n| **institution** | The institution number of the created bank account.|\n| **owner** | The ID of the entity who owns the account. |\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "95ed6317-680d-4e93-b6c6-d3c8d1622305",
+          "name": "Create Business Account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "8d7ea0a4-55d1-4c98-8280-ce20f48e0583",
+                "exec": [
+                  "pm.cookies.clear();",
+                  "",
+                  "// Set a random email address to create",
+                  "let accountNumber = Math.floor(1000000 * Math.random())",
+                  "pm.environment.set(\"business_account_number\", accountNumber);",
+                  "let accountName = \"CAD Checking \" + accountNumber",
+                  "pm.environment.set(\"business_account_name\", accountName);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "8891c9b4-c9ff-4b7f-a875-833002e23263",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "console.log(\"Created business account with ID: \" + jsonData.id)",
+                  "pm.environment.set(\"business_account_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 5,\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"\",\n    \"country\": \"\",\n    \"accountNumber\": \"{{business_account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"integrationId\": \"\",\n    \"address\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"12\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N2N1\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"bankAddress\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"\",\n        \"regionId\": \"\",\n        \"streetNumber\": \"\",\n        \"streetName\": \"\",\n        \"suite\": \"\",\n        \"city\": \"\",\n        \"postalCode\": \"\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"enabled\": true,\n    \"name\": \"{{business_account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"balance\": 0,\n    \"institution\": 16,\n    \"owner\": {{user_business_id}}\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json&actAs={{user_business_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "accountDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{user_business_id}}",
+                  "equals": true,
+                  "description": "The business on behalf of which the user acts. "
+                }
+              ]
+            },
+            "description": "## **Create Business Account**\n\nCreates a Canadian bank account for business.\n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of bank account. |\n| **branch** | The branch transit number of the bank account. |\n| **branchId** | The branch transit number of the bank account. |\n| **institutionNumber** | The institute number of the created bank account. |\n| **country** | The country code of the bank account. |\n| **accountNumber** | The account number of the bank account. |\n| **status** | The status of the bank account. |\n| **denomination** | The type of currency associated with the bank account. |\n| **verificationAttempts** | The number of times it is attempted to verify ownership of the bank account. |\n| **microVerificationTimestamp** | The timestamp of when ownership of the bank account is verified. |\n| **integrationId** | The ID of the integration of the bank account with the accounting system. |\n| **address** | A section allocated to fields related to the address of the bank branch. |\n| _class_ | The class of the address. |\n| _type_ | The type of the address. |\n| _verified_ | Determines if the address is verified. |\n| _structured_ | Determines if the address is structured. |\n| _address1_ | The unstructured address field for the entity. |\n| _address2_ | An additional unstructured address field for the entity. |\n| _countryId_ | The ID of the country. |\n| _regionId_ | The ID of the region, province or state. |\n| _streetNumber_ | The street number of the entity's address. |\n| _streetName_ | The street name of the entity's address. |\n| _suite_ | The suite number of the entity's address. |\n| _city_ | The city of the entity's address. \n| _postalCode_ | The postal code of the entity's address. |\n| _encrypted_ | Determines if the address should be encrypted. |\n| _latitude_ | The latitude of the address. |\n| _longitude_ | The longitude of the address. |\n| **bankAddress** | A section allocated to the fields related to the bank. |\n| _class_ | The class of the address. |\n| _type_ | The type of the address. |\n| _verified_ | Determines if the address is verified. |\n| _structured_ | Determines if the address is structured. |\n| _address1_ | The unstructured address field for the entity. |\n| _address2_ | An additional unstructured address field for the entity. |\n| _countryId_ | The ID of the country. |\n| _regionId_ | The ID of the region, province or state. |\n| _streetNumber_ | The street number of the entity's address. |\n| _streetName_ | The street name of the entity's address. |\n| _suite_ | The suite number of the entity's address. |\n| _city_ | The city of the entity's address. \n| _postalCode_ | The postal code of the entity's address. |\n| _encrypted_ | Determines if the address should be encrypted. |\n| _latitude_ | The latitude of the address. |\n| _longitude_ | The longitude of the address. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **deleted** | Determines if the user has chosen to delete the account. |\n| **name** | The name of the account. |\n| **desc** | The description of the account. |\n| **transferIn** | Determines if an account can receive transfers. |\n| **transferOut** | Determines if an account can make transfers out. |\n| **isDefault** | Determines the default account of the entity. |\n| **balance** | The amount of funds available in the account. |\n| **created** | The timestamp of when the account was created in the system. |\n| **createdBy** | The ID of the entity who created this bank account. |\n| **lastModified** | The timestamp of when the account was last modified in the system. |\n| **lastModifiedBy** | The ID of the entity who last modified this bank account. |\n| **institution** | The institute number of the created bank account.|\n| **owner** | The ID of the entity who owns the account. |\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "1e2afa92-f24c-4a33-9ee3-675f08c5c46f",
+          "name": "Retrieve All Accounts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8cc877b5-962a-4756-be9b-521303c0c499",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "data = jsonData.filter(function (d) {",
+                  "  return (d.class === \"net.nanopay.bank.CABankAccount\");",
+                  "});",
+                  "console.log(\"Found \" + data.length + \" Canadian bank accounts. First one is named \" + data[0].name + \" and ID \" + data[0].id);",
+                  "",
+                  "// Set the user ID",
+                  "// pm.environment.set(\"account_id\", data[0].id); // this is done in the create request"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=select&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "accountDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Retrieve All Accounts**\n\nQueries the server for a list of all accounts in the system."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "4df18d83-8acb-49be-b518-8487f0d02956",
+          "name": "Retrieve User Accounts",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=select&format=json&q=owner={{user_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "accountDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "q",
+                  "value": "owner={{user_id}}",
+                  "equals": true,
+                  "description": "The query parameter for retrieval requests."
+                },
+                {
+                  "key": "",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "## **Retrieve User Accounts**\n\nQueries the server for a list of user accounts."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "bdb29574-c40c-47df-916a-eed14aad58be",
+          "name": "Retrieve Business Accounts",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=select&format=json&actAs={{user_business_id}}&q=owner={{user_business_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "accountDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{user_business_id}}",
+                  "equals": true,
+                  "description": "The business on behalf of which the user acts. "
+                },
+                {
+                  "key": "q",
+                  "value": "owner={{user_business_id}}",
+                  "equals": true,
+                  "description": "The query parameter for retrieval requests."
+                }
+              ]
+            },
+            "description": "## **Retrieve Business Accounts**\n\nQueries the server for a list of business accounts."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "8621ec21-fd34-4acb-8507-281c395d5979",
+          "name": "Update Account",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"id\": {{account_id}},\n    \"branch\": 12,\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"323\",\n    \"country\": \"\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"integrationId\": \"\",\n    \"address\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"4\",\n        \"streetName\": \"River\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N1N1\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"bankAddress\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"enabled\": true,\n    \"desc\": \"Updated description\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"balance\": 0,\n    \"owner\": {{user_id}},\n    \"institution\": 24,\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "accountDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Update Account**\n\nUpdates a bank account.\n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of bank account. |\n| **id** | A unique ID for the object. |\n| **branch** | The branch transit number of the bank account. |\n| **branchId** | The branch transit number of the bank account. |\n| **institutionNumber** | The institute number of the created bank account. |\n| **country** | The country code of the bank account. |\n| **accountNumber** | The account number of the bank account. |\n| **status** | The status of the bank account. |\n| **denomination** | The type of currency associated with the bank account. |\n| **verificationAttempts** | The number of times it is attempted to verify ownership of the bank account. |\n| **microVerificationTimestamp** | The timestamp of when ownership of the bank account is verified. |\n| **integrationId** | The ID of the integration of the bank account with the accounting system. |\n| **address** | A section allocated to fields related to the address of the bank branch. |\n| _class_ | The class of the address. |\n| _type_ | The type of the address. |\n| _verified_ | Determines if the address is verified. |\n| _structured_ | Determines if the address is structured. |\n| _countryId_ | The ID of the country. |\n| _regionId_ | The ID of the region, province or state. |\n| _streetNumber_ | The street number of the entity's address. |\n| _streetName_ | The street name of the entity's address. |\n| _suite_ | The suite number of the entity's address. |\n| _city_ | The city of the entity's address. \n| _postalCode_ | The postal code of the entity's address. |\n| _encrypted_ | Determines if the address should be encrypted. |\n| _latitude_ | The latitude of the address. |\n| _longitude_ | The longitude of the address. |\n| **bankAddress** | A section allocated to the fields related to the bank. |\n| _class_ | The class of the address. |\n| _type_ | The type of the address. |\n| _verified_ | Determines if the address is verified. |\n| _structured_ | Determines if the address is structured. |\n| _address1_ | The unstructured address field for the entity. |\n| _address2_ | An additional unstructured address field for the entity. |\n| _countryId_ | The ID of the country. |\n| _regionId_ | The ID of the region, province or state. |\n| _streetNumber_ | The street number of the entity's address. |\n| _streetName_ | The street name of the entity's address. |\n| _suite_ | The suite number of the entity's address. |\n| _city_ | The city of the entity's address. \n| _postalCode_ | The postal code of the entity's address. |\n| _encrypted_ | Determines if the address should be encrypted. |\n| _latitude_ | The latitude of the address. |\n| _longitude_ | The longitude of the address. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **deleted** | Determines if the user has chosen to delete the account. |\n| **name** | The name of the account. |\n| **desc** | The description of the account. |\n| **transferIn** | Determines if an account can receive transfers. |\n| **transferOut** | Determines if an account can make transfers out. |\n| **isDefault** | Determines the default account of the entity. |\n| **balance** | The amount of funds available in the account. |\n| **created** | The timestamp of when the account was created in the system. |\n| **createdBy** | The ID of the entity who created this bank account. |\n| **lastModified** | The timestamp of when the account was last modified in the system. |\n| **lastModifiedBy** | The ID of the entity who last modified this bank account. |\n| **owner** | The ID of the entity who owns the account. |\n| **institution** | The institute number of the created bank account.|\n\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "4b3b3760-1238-4839-bb06-8a5c104ab8e9",
+          "name": "Delete Account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "bf0da891-a367-4397-b45e-eba939c89c10",
+                "exec": [
+                  "let authString = pm.environment.get(\"user_email\") + \":\" + pm.environment.get(\"user_password\");",
+                  "const encoding = CryptoJS.enc.Utf8.parse(authString);",
+                  "const base64 = CryptoJS.enc.Base64.stringify(encoding);",
+                  "",
+                  "let userAccountNumber = Math.floor(5000000 * Math.random()) + \"\";",
+                  "let userAccountName = \"CAD Deleting \" + userAccountNumber;",
+                  "let userId = pm.environment.get(\"user_id\");",
+                  "",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=accountDAO&cmd=put&format=json',",
+                  "    method: 'POST',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + base64,",
+                  "              'content-type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify(",
+                  "            {",
+                  "                class: \"net.nanopay.bank.CABankAccount\",",
+                  "                branch: 10,",
+                  "                branchId: \"12345\",",
+                  "                institutionNumber: \"323\",",
+                  "                country: \"\",",
+                  "                accountNumber: userAccountNumber,",
+                  "                status: 1,",
+                  "                denomination: \"CAD\",",
+                  "                verificationAttempts: 0,",
+                  "                integrationId: \"\",",
+                  "                address: {",
+                  "                    type: \"\",",
+                  "                    structured: true,",
+                  "                    countryId: \"CA\",",
+                  "                    regionId: \"ON\",",
+                  "                    streetNumber: \"4\",",
+                  "                    streetName: \"River\",",
+                  "                    city: \"Toronto\",",
+                  "                    postalCode: \"N1N1N1\",",
+                  "                    encrypted: false,",
+                  "                    latitude: 0,",
+                  "                    longitude: 0",
+                  "                },",
+                  "                bankAddress: {",
+                  "                    verified: false,",
+                  "                    structured: true,",
+                  "                    countryId: \"CA\",",
+                  "                    regionId: \"ON\",",
+                  "                    streetNumber: \"23\",",
+                  "                    streetName: \"Bank\",",
+                  "                    city: \"Toronto\",",
+                  "                    postalCode: \"M2N1M2\",",
+                  "                    encrypted: false,",
+                  "                    latitude: 0,",
+                  "                    longitude: 0",
+                  "                },",
+                  "                enabled: true,",
+                  "                name: userAccountName,",
+                  "                desc: \"\",",
+                  "                transferIn: true,",
+                  "                transferOut: true,",
+                  "                isDefault: true,",
+                  "                balance: 0,",
+                  "                institution: 24,",
+                  "                owner: userId",
+                  "            } )",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    pm.environment.set(\"account_id_to_delete\", res.json().id);",
+                  "    console.log(\"Created account to delete: \" + pm.environment.get(\"account_id_to_delete\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=remove&format=json&id={{account_id_to_delete}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "accountDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "remove",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "id",
+                  "value": "{{account_id_to_delete}}",
+                  "equals": true,
+                  "description": "The ID of the entity to be deleted in the DAO."
+                }
+              ]
+            },
+            "description": "## **Delete Account**\n\nDeletes a bank account object."
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "6844ec4b-f91e-4ad9-9af6-b0d7024880da",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "5bf63fe3-44b1-4b36-82a1-d9d43d8dc96b",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "f6384313-5242-4e2c-a50b-bfebcfd7a438",
+      "name": "Partner",
+      "description": "A partner is a linking relationship between two users that exist in the system. \n",
+      "item": [
+        {
+          "_postman_id": "80f3130e-8e51-497a-b63d-1a8c295a57f4",
+          "name": "Create Partner Connection",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"sourceId\": {{id}},\n    \"targetId\": {{user_id}},\n    \"partnerId\": {{id}},\n    \"yourId\": {{user_id}}\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=partnerJunctionDAO&cmd=put&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "partnerJunctionDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response. "
+                }
+              ]
+            },
+            "description": "**Create Partner Connection**\n\nCreates a partner object.\n\n| Body Parameters | Description |\n| -----: | ----- |\n| **sourceId** | The ID of the source. |\n| **targetId** | The ID of the target. |\n| **partnerId** | The ID of the partner. |\n| **yourId** | The ID of the entity. |\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "ac7633e0-4124-41c3-a9af-fa8138fb5ab2",
+          "name": "Retrieve Partner Connections",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=partnerJunctionDAO&cmd=select&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "partnerJunctionDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Retrieve Partner Connections**\n\nQueries the server for a list of existing partner connections."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "8c6ae2fe-8e94-43f1-bbb6-d5e62fde1842",
+          "name": "Retrieve Public Users",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=publicUserDAO&cmd=select&format=json&q=id>8000",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "publicUserDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "q",
+                  "value": "id>8000",
+                  "equals": true,
+                  "description": "The query parameter for retrieval requests."
+                }
+              ]
+            },
+            "description": "## **Retrieve Public Users**\n\nQueries the server for a list of public users in the system that can become partners."
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "86c023e3-f609-43e3-8050-229dc2356119",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "41bc9b61-d962-4d6e-ae50-81cbcc4c53db",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "3009de5f-c550-4b78-89b8-728412903dc6",
+      "name": "Invoice",
+      "description": "An invoice object can be used to create and manage an invoice against which payment can be made.",
+      "item": [
+        {
+          "_postman_id": "970cd5fd-452f-4da1-9abe-4ee5505eec05",
+          "name": "Create an invoice",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "abb91994-1d38-4270-b6f9-baac54e3be8a",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "console.log(\"Created invoice with ID: \" + jsonData.id)",
+                  "pm.environment.set(\"invoice_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"class\":\"net.nanopay.invoice.model.Invoice\", \n\t\"name\":\"testInvoice\", \n\t\"account\":{{business_account_id}}, \n\t\"destinationAccount\":{{account_id}}, \n\t\"amount\":11111, \n\t\"payerId\":{{user_business_id}},\n\t\"payeeId\": {{user_id}}, \n\t\"destinationCurrency\":\"CAD\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=put&format=json&actAs={{user_business_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "invoiceDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{user_business_id}}",
+                  "equals": true,
+                  "description": "The business on behalf of which the user acts. "
+                }
+              ]
+            },
+            "description": "## **Creates an invoice**\n\nCreates an invoice object.\n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of invoice. |\n| **name** | The name of the invoice. |\n| **sourceAccount** | The bank account of the payer. |\n| **destinationAccount** | The bank account of the payee | **amount** | The amound of the invoice to be paid. |\n| **payerID** | The ID associated with the payer. |\n| **payeeID** | The ID associated with the payee. |\n| **destinationCurrency** | The type of currency required by the invoice. |\n"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "eea6d621-65c4-4563-be9b-1b4bca2eddc6",
+          "name": "Retrieve Invoices",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"class\":\"net.nanopay.invoice.model.Invoice\", \n\t\"name\":\"testInvoice\", \n\t\"sourceAccount\":16, \n\t\"destinationAccount\":25, \n\t\"amount\":11111, \n\t\"payerId\":8011,\n\t\"payeeId\": 8019, \n\t\"destinationCurrency\":\"CAD\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=select&format=json&actAs={{user_business_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "invoiceDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{user_business_id}}",
+                  "equals": true,
+                  "description": "The business on behalf of which the user acts. "
+                }
+              ]
+            },
+            "description": "## **Query Invoice**\n\nQueries all invoices assosciated with the requesting entity."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "6f648d14-c1f6-40e6-b83e-e247a20ab3bf",
+          "name": "Retrieve an Invoice",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=select&format=json&actAs={{user_business_id}}&q=id={{invoice_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "invoiceDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response. "
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{user_business_id}}",
+                  "equals": true,
+                  "description": "The business on behalf of which the user acts. "
+                },
+                {
+                  "key": "q",
+                  "value": "id={{invoice_id}}",
+                  "equals": true,
+                  "description": "The query parameter for retrieval requests."
+                }
+              ]
+            },
+            "description": "Queries a single invoice."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "41f359cf-85b1-437d-a573-2fc415971d1c",
+          "name": "Pay an Invoice",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId={{invoice_id}}&x=X&actAs={{user_business_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "sugar"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "invoicePaymentService",
+                  "equals": true
+                },
+                {
+                  "key": "interfaceName",
+                  "value": "net.nanopay.invoice.service.InvoicePaymentService",
+                  "equals": true
+                },
+                {
+                  "key": "method",
+                  "value": "pay",
+                  "equals": true
+                },
+                {
+                  "key": "invoiceId",
+                  "value": "{{invoice_id}}",
+                  "equals": true,
+                  "description": "The ID of the invoice being paid."
+                },
+                {
+                  "key": "x",
+                  "value": "X",
+                  "equals": true
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{user_business_id}}",
+                  "equals": true,
+                  "description": "The business on behalf of which the user acts. "
+                }
+              ]
+            },
+            "description": "This is a call to pay an invoice, between the accounts and for the amount on the invoice being paid. "
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "e6b4ca04-0a74-4da4-9474-d0cdf3d287fe",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "7f8f22e0-143b-407b-855b-70461a3b6cbb",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "4a9630fa-131b-4f88-977c-cab44fa8e5ee",
+      "name": "Help",
+      "description": "Use this Help for additional information beyond the core functions outlined in this API Reference.\n\n\n",
+      "item": [
+        {
+          "_postman_id": "6fa49f76-2614-4ce0-9d14-d8e95d0a518f",
+          "name": "Query Parameter",
+          "description": "This is a query syntax that allows for filtering of entities within a DAO where access is based on the fields in the entity. \n\n**About the query syntac**\n\n* \u2018q\u2019 is the query parameter for retrieval requests (i.e. cmd=select).\n* is composed of HTML encoded strings\n* is composed of predicates (e.g. x =< y) linked by logical operators (e.g. and, or)\n* used to filter on retrieval (i.e. q=\u201dxxx\u201d)\n* used to get a specific entity or all entities with specific values\n\n",
+          "item": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "525e5aa2-03f4-46d2-9d97-4deb081cbf87",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "b7ea8aa0-7145-4eb8-a8a8-e74dd0f08312",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "_postman_id": "b1763900-02b1-4fd7-8385-d68fb6d22597",
+          "name": "Retrieve Countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=countryDAO&cmd=select&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "countryDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "d1e063c7-82d8-4fe6-af28-306029e7f509",
+          "name": "Retrieve Regions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=regionDAO&cmd=select&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "regionDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "68575dbc-13ac-41d6-9796-bf009352444d",
+          "name": "Retrieve Business Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=businessTypeDAO&cmd=select&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "businessTypeDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "c4ac4d84-506e-4c06-ae45-c0e09212ef72",
+          "name": "Retrieve Business Sector",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=businessSectorDAO&cmd=select&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "businessSectorDAO",
+                  "equals": true,
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "equals": true,
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "equals": true,
+                  "description": "The format of the response."
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "e75cbdda-1d85-41d5-b1d2-999168143db8",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "4c7a4701-3c93-4d53-b8cc-3d9e4216efb2",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": {
+      "password": "Nanopay123",
+      "username": "developer@nanopay.net"
+    }
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "fd22c28e-1a54-4b81-987f-64411d7e3edc",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "148626ce-e9bb-432d-850e-f22e86a8be95",
+        "type": "text/javascript",
+        "exec": [
+          "// Check the status of the response",
+          "pm.test(\"Status code is 200\", function () {",
+          "    pm.response.to.have.status(200);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "b30e977a-3915-42ea-88bb-4b41ad3c0e0c",
+      "key": "url",
+      "value": "http://localhost:8080/",
+      "type": "string",
+      "description": ""
+    }
+  ]
+}
