@@ -2095,7 +2095,8 @@
                 {
                   "key": "x",
                   "value": "X",
-                  "equals": true
+                  "equals": true,
+                  "description": "The context of the payment request."
                 },
                 {
                   "key": "actAs",
@@ -2398,7 +2399,7 @@
   ],
   "variable": [
     {
-      "id": "b30e977a-3915-42ea-88bb-4b41ad3c0e0c",
+      "id": "97f9c7af-cc26-4e76-82c2-9c0619e64de9",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
