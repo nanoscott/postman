@@ -518,7 +518,7 @@
                 }
               ]
             },
-            "description": "## **Update User**\n\nUpdates a user object by setting the values of the parameters passed. Any parameters not provided are left unchanged. \n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of user. |\n| **id** | A unique ID for the entity. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address associated with the entity.|\n| **language** | The preferred language of the entity. |\n| **timeZone** | The time zone of the entity. |\n| **note** | \u2026 |\n| **businessName** | A section allocated for information related to the business. |\n| **bankIdentificationCode** | \u2026 |\n| **businessHoursEnabled** | \u2026 |\n| **website** | The website of the entity. |\n| **integrationCode** | \u2026 |\n| **hasIntegrated** | \u2026 |\n| **loginAttempts** | \u2026 |\n| **isPublic** | \u2026 |\n| **nextLoginAttemptAllowedAt** | \u2026 |\n| **ownershipPercent** | A percentage value indicating how much of the organization is owned by the entity. |\n| **businessTypeId** | A unique ID for the business type. |\n| **businessSectorId** | A unique ID for the business sector. |\n| **invited** | \u2026 |\n| **invitedBy** | \u2026 |\n| **previousStatus** | \u2026 |\n| **jobTitle** | The job title of the entity. |\n| **principleType** | The type of principal owner associated with the organization. |\n| **welcomeEmailSent** | \u2026 |\n| **portalAdminCreated** | \u2026 |\n| **businessRegistrationNumber** | \u2026 |\n| **businessRegistrationAuthority** | \u2026 |\n| **onboarded** | \u2026 |\n| **createdPwd** | \u2026 |\n| **inviteAttempts** | \u2026 |\n| **operatingBusinessName** | \u2026 |\n| **holdingCompany** | \u2026 |\n| **thirdParty** | \u2026 |\n| **PEPHIORelated** | \u2026 |\n| **signingOfficer** | \u2026 |\n| **targetCustomers** | Defines the type of clients for the organization. |\n| **sourceOfFunds** | Where the organization receives its funds. |\n| **taxIdentificationNumber** | \u2026 |\n| **signUpToken** | \u2026 |\n| **deviceToken** | \u2026 |\n| **twoFactorEnabled** | \u2026 |\n| **lastModified** | The timestamp of when the account was last modified in the system. |\n| **createdBy** | The ID of the entity who created this business. |\n"
+            "description": "## **Update User**\n\nUpdates a user object by setting the values of the parameters passed. Any parameters not provided are left unchanged. \n\n| Body Parameters | Description |\n| -----: | ----- |\n| **id** | A unique ID for the entity. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **department** | The department of the entity. |\n| **email** | The email address associated with the entity.|\n| **language** | The preferred language of the entity. |\n| **timeZone** | The time zone of the entity. |\n| **note** | A note about the entity. |\n| **isPublic** | Whether the entity is publicly searchable. |\n| **jobTitle** | The job title of the entity. |\n| **twoFactorEnabled** | Whether two-factor authentication is enabled for this user. |\n"
           },
           "response": []
         },
@@ -1983,7 +1983,7 @@
               "raw": ""
             },
             "url": {
-              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId=130&x=X&actAs=8011",
+              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId={{invoice_id}}&x=X&actAs=8011",
               "host": [
                 "{{url}}"
               ],
@@ -2012,7 +2012,7 @@
                 },
                 {
                   "key": "invoiceId",
-                  "value": "130",
+                  "value": "{{invoice_id}}",
                   "equals": true,
                   "description": "The ID of the invoice being paid."
                 },
@@ -2622,7 +2622,7 @@
   ],
   "variable": [
     {
-      "id": "55b58926-7ae3-4835-b119-7869a3360a52",
+      "id": "cc8f5036-a680-4b5a-b40f-2eb3b5f4be22",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
