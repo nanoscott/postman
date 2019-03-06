@@ -1975,6 +1975,35 @@
         {
           "_postman_id": "41f359cf-85b1-437d-a573-2fc415971d1c",
           "name": "Pay an Invoice",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "38761039-4f19-4a5c-83e7-3a6975175c78",
+                "exec": [
+                  "let authString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
+                  "const encoding = CryptoJS.enc.Utf8.parse(authString);",
+                  "const base64 = CryptoJS.enc.Base64.stringify(encoding);",
+                  "",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=userDAO&cmd=put&format=json',",
+                  "    method: 'PUT',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + base64,",
+                  "              'content-type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({ firstName: \"initialFirstName\", lastName: \"initialLastName\", email: pm.environment.get(\"email\"), desiredPassword: pm.environment.get(\"password\"), organization: \"initialOrganization\" } )",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    console.log(\"Email: \" + pm.environment.get(\"email\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -1983,7 +2012,7 @@
               "raw": ""
             },
             "url": {
-              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId={{invoice_id}}&x=X&actAs=8011",
+              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId={{invoice_id}}&x=X&actAs={{user_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -2023,7 +2052,7 @@
                 },
                 {
                   "key": "actAs",
-                  "value": "8011",
+                  "value": "{{user_business_id}}",
                   "equals": true,
                   "description": "The business on behalf of which the user acts. "
                 }
@@ -2622,7 +2651,7 @@
   ],
   "variable": [
     {
-      "id": "cc8f5036-a680-4b5a-b40f-2eb3b5f4be22",
+      "id": "6efa8e5b-e8ab-4e86-9c9c-5e101b62e61f",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
