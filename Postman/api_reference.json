@@ -558,7 +558,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"id\": {{user_id}},\n    \"enabled\": true,\n    \"firstName\": \"updatedFirstName\",\n    \"middleName\": \"updatedMiddleName\",\n    \"lastName\": \"updatedLastName\",\n    \"organization\": \"abliiOrganization\",\n    \"department\": \"\",\n    \"email\": \"{{user_email}}\",\n    \"emailVerified\": false,\n    \"phone\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"mobile\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"type\": \"User\",\n    \"address\": {\n        \"class\": \"foam.nanos.auth.Address\",\n        \"type\": \"\",\n        \"verified\": false,\n        \"deleted\": false,\n        \"structured\": true,\n        \"address1\": \"\",\n        \"address2\": \"\",\n        \"countryId\": \"BR\",\n        \"regionId\": \"\",\n        \"streetNumber\": \"\",\n        \"streetName\": \"\",\n        \"suite\": \"\",\n        \"city\": \"\",\n        \"postalCode\": \"\",\n        \"encrypted\": false,\n        \"latitude\": 0,\n        \"longitude\": 0\n    },\n    \"language\": \"\",\n    \"timeZone\": \"\",\n    \"passwordLastModified\": \"2019-02-28T19:18:46.183Z\",\n    \"note\": \"\",\n    \"businessName\": \"\",\n    \"bankIdentificationCode\": \"\",\n    \"businessHoursEnabled\": false,\n    \"website\": \"\",\n    \"loginAttempts\": 0,\n    \"isPublic\": true,\n    \"nextLoginAttemptAllowedAt\": \"2019-02-26T16:21:41.579Z\",\n    \"ownershipPercent\": 0,\n    \"businessTypeId\": 4,\n    \"businessSectorId\": 33792,\n    \"invited\": false,\n    \"invitedBy\": 0,\n    \"jobTitle\": \"\",\n    \"principleType\": \"\",\n    \"businessPhone\": {\n        \"verified\": false,\n        \"number\": \"647-444-5555\"\n    },\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"PEPHIORelated\": false,\n    \"signingOfficer\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\",\n    \"signUpToken\": \"5678\",\n    \"deviceToken\": \"5678\",\n    \"twoFactorEnabled\": false\n}"
+              "raw": "{\n    \"id\": {{user_id}},\n    \"enabled\": true,\n    \"firstName\": \"updatedFirstName\",\n    \"middleName\": \"updatedMiddleName\",\n    \"lastName\": \"updatedLastName\",\n    \"department\": \"\",\n    \"email\": \"{{user_email}}\",\n    \"language\": \"\",\n    \"timeZone\": \"\",\n    \"note\": \"\",\n    \"isPublic\": true,\n    \"jobTitle\": \"\",\n    \"twoFactorEnabled\": false,\n    \"phone\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"mobile\": {\n        \"verified\": false,\n        \"number\": \"\"\n    }\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=userDAO&cmd=put&format=json",
@@ -898,7 +898,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.model.Business\",\n    \"residenceOperated\": false,\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"abliiOrganization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"abliiOrganization\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"portalAdminCreated\": false,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"onboarded\": false,\n    \"createdPwd\": false,\n    \"inviteAttempts\": 0,\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"PEPHIORelated\": false,\n    \"signingOfficer\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\",\n    \"signUpToken\": \"\",\n    \"deviceToken\": \"\"\n}"
+              "raw": "{\n    \"class\": \"net.nanopay.model.Business\",\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"abliiOrganization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"abliiOrganization\",\n    \"website\": \"\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\"\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=businessDAO&cmd=put&format=json&actAs={{user_business_id}}",
@@ -2048,13 +2048,6 @@
           "_postman_id": "41f359cf-85b1-437d-a573-2fc415971d1c",
           "name": "Pay an Invoice",
           "request": {
-            "auth": {
-              "type": "basic",
-              "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
-              }
-            },
             "method": "GET",
             "header": [],
             "body": {
@@ -2062,7 +2055,7 @@
               "raw": ""
             },
             "url": {
-              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId={{invoice_id}}&x=X&actAs={{user_business_id}}",
+              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId=130&x=X&actAs=8011",
               "host": [
                 "{{url}}"
               ],
@@ -2074,33 +2067,35 @@
                 {
                   "key": "service",
                   "value": "invoicePaymentService",
-                  "equals": true
+                  "equals": true,
+                  "description": "The service processing the invoice."
                 },
                 {
                   "key": "interfaceName",
                   "value": "net.nanopay.invoice.service.InvoicePaymentService",
-                  "equals": true
+                  "equals": true,
+                  "description": "The interface processing the invoice."
                 },
                 {
                   "key": "method",
                   "value": "pay",
-                  "equals": true
+                  "equals": true,
+                  "description": "The method being called on the service."
                 },
                 {
                   "key": "invoiceId",
-                  "value": "{{invoice_id}}",
+                  "value": "130",
                   "equals": true,
                   "description": "The ID of the invoice being paid."
                 },
                 {
                   "key": "x",
                   "value": "X",
-                  "equals": true,
-                  "description": "The context of the payment request."
+                  "equals": true
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "8011",
                   "equals": true,
                   "description": "The business on behalf of which the user acts. "
                 }
@@ -2399,7 +2394,7 @@
   ],
   "variable": [
     {
-      "id": "97f9c7af-cc26-4e76-82c2-9c0619e64de9",
+      "id": "12d8153e-cf8b-43cf-a692-c334c49c3c0b",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
