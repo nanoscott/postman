@@ -106,10 +106,10 @@
             "method": "GET",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Basic {{authorization}}",
                 "description": "Base64 encoding of API key and secrets  required by basic authentication.",
-                "type": "text"
+                "key": "Authorization",
+                "type": "text",
+                "value": "Basic {{authorization}}"
               }
             ],
             "body": {
@@ -117,7 +117,7 @@
               "raw": ""
             },
             "url": "{{url}}/service/dig",
-            "description": "## **API Key and Secret Authentication** \nThe nanopay API uses Basic Authentication with API keys and secrets to authenticate requests. The API keys can be viewed and managed in the Personal Settings of the user.\n\n**IMPORTANT NOTES:**\n\n* **SECURE THE API KEYS**, as they carry the same privileges as the user that they were created for, and therefore must be secured to prevent inadvertant or malicious actions.\n\n* **DO NOT SHARE** your secret API keys in publicly accessible areas such as GitHub, client-side code and so forth."
+            "description": "## **API Key and Secret Authentication** \nThe nanopay API uses Basic Authentication with API keys and secrets to authenticate requests. The API keys can be viewed and managed in the Personal Settings of the user.\n\nFor a general understanding of Basic Authentication, please select this [link](https://tools.ietf.org/html/rfc7617).\n\n**IMPORTANT NOTES:**\n\n* **SECURE THE API KEYS**, as they carry the same privileges as the user that they were created for, and therefore must be secured to prevent inadvertant or malicious actions.\n\n* **DO NOT SHARE** your secret API keys in publicly accessible areas such as GitHub, client-side code and so forth."
           },
           "response": []
         },
@@ -249,7 +249,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"abliiFirstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"abliiLastName\",\n    \"email\": \"{{user_email}}\",\n    \"desiredPassword\": \"{{user_password}}\",\n    \"organization\": \"abliiOrganization\"\n}"
+              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{user_email}}\",\n    \"desiredPassword\": \"{{user_password}}\",\n    \"organization\": \"Sample Organization\"\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json",
@@ -827,7 +827,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.model.Business\",\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"abliiOrganization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"abliiOrganization\",\n    \"website\": \"\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\"\n}"
+              "raw": "{\n    \"class\": \"net.nanopay.model.Business\",\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"Sample Organization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"Sample Organization\",\n    \"website\": \"\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\"\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=businessDAO&cmd=put&format=json&actAs={{user_business_id}}",
@@ -1996,7 +1996,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_id\"), compliance: 2, emailVerified: true } )",
+                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_id\"), compliance: 2, onboarded: true, emailVerified: true } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
@@ -2011,7 +2011,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2, emailVerified: true } )",
+                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2, onboarded: true, emailVerified: true } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for business: \" + pm.environment.get(\"user_business_id\"));",
@@ -2668,7 +2668,7 @@
   ],
   "variable": [
     {
-      "id": "f23e8e72-24b1-4542-9a29-e9f873d56e9a",
+      "id": "36ed7a5d-7d79-4da6-aa5c-a7481b6fa076",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
