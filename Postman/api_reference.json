@@ -819,6 +819,7 @@
                 "value": "application/json"
               },
               {
+                "description": "Reset the session.",
                 "key": "Cookie",
                 "type": "text",
                 "value": "sessionId="
@@ -1108,6 +1109,7 @@
               {
                 "key": "Cookie",
                 "value": "sessionId=",
+                "description": "Reset the session.",
                 "type": "text"
               }
             ],
@@ -1994,7 +1996,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_id\"), compliance: 2 } )",
+                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_id\"), compliance: 2, emailVerified: true } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
@@ -2009,7 +2011,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2 } )",
+                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2, emailVerified: true } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for business: \" + pm.environment.get(\"user_business_id\"));",
@@ -2666,7 +2668,7 @@
   ],
   "variable": [
     {
-      "id": "9b11fd3c-7a95-43a7-bda9-29ba7bd3b4fb",
+      "id": "7d5e4cbf-dd41-49fb-afda-18ab56a29366",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
