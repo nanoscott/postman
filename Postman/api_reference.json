@@ -92,7 +92,7 @@
               "raw": ""
             },
             "url": "{{url}}/service/dig",
-            "description": "## **Username and Password Authentication** \nThe nanopay API uses Basic Authentication with username and password to authenticate requests. This is the simplest form of authentication and should not be used for advanced applications."
+            "description": "## **Username and Password Authentication** \nThe nanopay API uses Basic Authentication with username and password to authenticate requests. This is the simplest form of authentication and should not be used for advanced applications.\n\nFor a general understanding of Basic Authentication, please select this [link](https://tools.ietf.org/html/rfc7617)."
           },
           "response": []
         },
@@ -281,7 +281,7 @@
                 }
               ]
             },
-            "description": "## **Create User - Register Ablii**\n\nCreates a user object in Ablii.\n\n**Note:** \n1. Creating a user object in Ablii also creates a Business object for the user. The \u2018organization\u2019 is used as the business name and all the user data is copied over to the business as well.\n2. Email verification will be prompted after the object is created.\n\n| Body Parameters | Description |\n| ---- | ---- |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address of the entity. |\n| **desiredPassword** | The password entered by the entity. |\n| **organization** | The company or business name with which the entity wishes to be associated. |\n"
+            "description": "## **Create a User**\n\nCreates a user object.\n\n**Note:** \n1. Creating a user object also creates a Business object for the user. The \u2018organization\u2019 is used as the business name and all the user data is copied over to the business as well.\n2. Email verification will be prompted after the object is created.\n\n| Body Parameters | Description |\n| ---- | ---- |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address of the entity. |\n| **desiredPassword** | The password entered by the entity. |\n| **organization** | The company or business name with which the entity wishes to be associated. |\n"
           },
           "response": []
         },
@@ -664,7 +664,7 @@
     {
       "_postman_id": "293f1464-8b3b-476b-bbdf-b5280f49bb96",
       "name": "Business",
-      "description": "A business allows many users to act on behalf of a business. The business is associated with the company name provided by the user upon creating a single user.\n\nThe business object allows business information to be updated and retrieved.  The body parameters refer to the business as the 'organization'.",
+      "description": "A business is an entity on behalf of which multiple users can act. A business is associated with the company name provided by the user who first creates it.\n\nThe business object allows business information to be updated and retrieved.  The body parameters refer to the business as the 'organization'.",
       "item": [
         {
           "_postman_id": "d6c1a26e-720e-4fbf-82cf-62f23e79d7af",
@@ -1640,7 +1640,7 @@
         },
         {
           "_postman_id": "ac7633e0-4124-41c3-a9af-fa8138fb5ab2",
-          "name": "Retrieve Partner Connections",
+          "name": "Retrieve All Partner Connections",
           "request": {
             "auth": {
               "type": "basic",
@@ -2668,7 +2668,7 @@
   ],
   "variable": [
     {
-      "id": "2bbc4c47-7bb2-4c31-a65e-48c795c85f35",
+      "id": "f23e8e72-24b1-4542-9a29-e9f873d56e9a",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
