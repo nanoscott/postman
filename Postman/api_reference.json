@@ -1856,7 +1856,7 @@
         },
         {
           "_postman_id": "eea6d621-65c4-4563-be9b-1b4bca2eddc6",
-          "name": "Retrieve Invoices",
+          "name": "Retrieve All Invoices",
           "request": {
             "auth": {
               "type": "basic",
@@ -2668,7 +2668,7 @@
   ],
   "variable": [
     {
-      "id": "7d5e4cbf-dd41-49fb-afda-18ab56a29366",
+      "id": "2bbc4c47-7bb2-4c31-a65e-48c795c85f35",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
