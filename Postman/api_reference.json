@@ -1994,10 +1994,10 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ firstName: \"initialFirstName\", lastName: \"initialLastName\", email: pm.environment.get(\"email\"), desiredPassword: pm.environment.get(\"password\"), organization: \"initialOrganization\" } )",
+                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_id\"), compliance: 2 } )",
                   "    }",
                   "}, function (err, res) {",
-                  "    console.log(\"Email: \" + pm.environment.get(\"email\"));",
+                  "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -2651,7 +2651,7 @@
   ],
   "variable": [
     {
-      "id": "6efa8e5b-e8ab-4e86-9c9c-5e101b62e61f",
+      "id": "8852ab06-72df-4b37-a9ac-72a436c0da5b",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
