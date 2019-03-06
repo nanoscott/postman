@@ -1998,6 +1998,21 @@
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
+                  "});",
+                  "",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=put&format=json',",
+                  "    method: 'PUT',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + base64,",
+                  "              'content-type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2 } )",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    console.log(\"Set compliance status for business: \" + pm.environment.get(\"user_business_id\"));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -2651,7 +2666,7 @@
   ],
   "variable": [
     {
-      "id": "8852ab06-72df-4b37-a9ac-72a436c0da5b",
+      "id": "44408293-4a67-4c76-8a39-e94cda338898",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
