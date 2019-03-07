@@ -2020,6 +2020,13 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
             "method": "GET",
             "header": [],
             "body": {
@@ -2666,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "93361a0e-ac5d-4d11-9404-05f83ae2799d",
+      "id": "9cfde08f-216c-496c-b1b2-8da4f7eb44fa",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
