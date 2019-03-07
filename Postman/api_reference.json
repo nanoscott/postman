@@ -92,7 +92,7 @@
               "raw": ""
             },
             "url": "{{url}}/service/dig",
-            "description": "## **Username and Password Authentication** \nThe nanopay API uses Basic Authentication with username and password to authenticate requests. This is the simplest form of authentication and should not be used for advanced applications.\n\nFor a general understanding of Basic Authentication, please select this [link](https://tools.ietf.org/html/rfc7617)."
+            "description": "## **Username and Password Authentication** \nThe **nanopay API** uses Basic Authentication with username and password to authenticate requests. This is the simplest form of authentication and should not be used for advanced applications.\n\nFor a general understanding of Basic Authentication, please select this [link](https://tools.ietf.org/html/rfc7617)."
           },
           "response": []
         },
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "53f7403f-2537-4f03-9bff-15649fdb9ec9",
+      "id": "34df5b89-d935-4fa5-8479-82d2c993fe71",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
