@@ -2635,8 +2635,8 @@
   "auth": {
     "type": "basic",
     "basic": {
-      "password": "Nanopay123",
-      "username": "developer@nanopay.net"
+      "password": "{{developer_password}}",
+      "username": "{{developer_email}}"
     }
   },
   "event": [
@@ -2666,7 +2666,7 @@
   ],
   "variable": [
     {
-      "id": "01c2cdb2-a68f-4561-be03-f955462e2bcf",
+      "id": "93361a0e-ac5d-4d11-9404-05f83ae2799d",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
