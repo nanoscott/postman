@@ -1113,7 +1113,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 5,\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"\",\n    \"country\": \"\",\n    \"accountNumber\": \"{{business_account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"12\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N2N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"\",\n        \"regionId\": \"\",\n        \"streetNumber\": \"\",\n        \"streetName\": \"\",\n        \"suite\": \"\",\n        \"city\": \"\",\n        \"postalCode\": \"\"\n    },\n    \"enabled\": true,\n    \"name\": \"{{business_account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"balance\": 0,\n    \"institution\": 16,\n    \"owner\": {{user_business_id}}\n}"
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 5,\n    \"country\": \"\",\n    \"accountNumber\": \"{{business_account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"12\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N2N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"\",\n        \"regionId\": \"\",\n        \"streetNumber\": \"\",\n        \"streetName\": \"\",\n        \"suite\": \"\",\n        \"city\": \"\",\n        \"postalCode\": \"\"\n    },\n    \"enabled\": true,\n    \"name\": \"{{business_account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"balance\": 0,\n    \"institution\": 16,\n    \"owner\": {{user_business_id}}\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json&actAs={{user_business_id}}",
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "d336a842-4676-477f-add7-89596e3efa93",
+      "id": "57821fc8-b6e1-4d19-b8ee-5af04f060500",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
