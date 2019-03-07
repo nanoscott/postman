@@ -1374,7 +1374,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"id\": {{account_id}},\n    \"branch\": 12,\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"323\",\n    \"country\": \"\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"integrationId\": \"\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"4\",\n        \"streetName\": \"River\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N1N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\"\n    },\n    \"enabled\": true,\n    \"desc\": \"Updated description\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"owner\": {{user_id}},\n    \"institution\": 24,\n}"
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"id\": {{account_id}},\n    \"branch\": 12,\n    \"country\": \"\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"integrationId\": \"\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"4\",\n        \"streetName\": \"River\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N1N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\"\n    },\n    \"enabled\": true,\n    \"desc\": \"Updated description\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"owner\": {{user_id}},\n    \"institution\": 24,\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json",
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "56f62bf6-4c83-4855-9035-ceb5adbd510c",
+      "id": "859fb347-b7c0-4942-b4af-49699a05a69f",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
