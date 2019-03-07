@@ -1905,7 +1905,7 @@
                 }
               ]
             },
-            "description": "## **Query Invoice**\n\nQueries all invoices assosciated with the requesting entity."
+            "description": "## **Query Invoice**\n\nQueries all invoices associated with the requesting entity."
           },
           "response": []
         },
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "bbdedfdb-e17f-40ea-b784-92011fba3f78",
+      "id": "91053803-54ee-467d-b3d1-96492a37826e",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
