@@ -117,7 +117,7 @@
               "raw": ""
             },
             "url": "{{url}}/service/dig",
-            "description": "## **API Key and Secret Authentication** \nThe nanopay API uses Basic Authentication with API keys and secrets to authenticate requests. The API keys can be viewed and managed in the Personal Settings of the user.\n\nFor a general understanding of Basic Authentication, please select this [link](https://tools.ietf.org/html/rfc7617).\n\n**IMPORTANT NOTES:**\n\n* **SECURE THE API KEYS**, as they carry the same privileges as the user that they were created for, and therefore must be secured to prevent inadvertant or malicious actions.\n\n* **DO NOT SHARE** your secret API keys in publicly accessible areas such as GitHub, client-side code and so forth."
+            "description": "## **API Key and Secret Authentication** \nThe **nanopay API** uses Basic Authentication with API keys and secrets to authenticate requests. The API keys can be viewed and managed in the Personal Settings of the user.\n\nFor a general understanding of Basic Authentication, please select this [link](https://tools.ietf.org/html/rfc7617).\n\n**IMPORTANT NOTES:**\n\n* **SECURE THE API KEYS**, as they carry the same privileges as the user that they were created for, and therefore must be secured to prevent inadvertant or malicious actions.\n\n* **DO NOT SHARE** your secret API keys in publicly accessible areas such as GitHub, client-side code and so forth."
           },
           "response": []
         },
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "9cfde08f-216c-496c-b1b2-8da4f7eb44fa",
+      "id": "9dc1a98c-edac-4fbd-b7cc-ada2e94e78b7",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
