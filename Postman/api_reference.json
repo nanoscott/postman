@@ -1848,7 +1848,7 @@
                 }
               ]
             },
-            "description": "## **Creates an invoice**\n\nCreates an invoice object.\n\n| Body Parameters | Description |\n| -----: | ----- |\n| **class** | Type of invoice. |\n| **name** | The name of the invoice. |\n| **sourceAccount** | The bank account of the payer. |\n| **destinationAccount** | The bank account of the payee | **amount** | The amound of the invoice to be paid. |\n| **payerID** | The ID associated with the payer. |\n| **payeeID** | The ID associated with the payee. |\n| **destinationCurrency** | The type of currency required by the invoice. |\n"
+            "description": "## **Creates an invoice**\n\nCreates an invoice object.\n\n| Body Parameters | Description |\n| -----: | ----- |\n| **name** | The name of the invoice. |\n| **sourceAccount** | The bank account of the payer. |\n| **destinationAccount** | The bank account of the payee | **amount** | The amound of the invoice to be paid. |\n| **payerID** | The ID associated with the payer. |\n| **payeeID** | The ID associated with the payee. |\n| **destinationCurrency** | The type of currency required by the invoice. |\n"
           },
           "response": []
         },
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "4cf67103-1fae-4548-9bc3-1e0eeca3a4d3",
+      "id": "87b266aa-2f67-4589-b77f-baf93451054b",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
