@@ -934,7 +934,7 @@
                 }
               ]
             },
-            "description": "## **Delete Business**\n\nDeletes a business (organization)."
+            "description": "## **Delete Business**\n\nDeletes a business (organization) object."
           },
           "response": []
         }
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "74704ef1-3d28-4586-9751-45e31a2a861c",
+      "id": "48aaa9e5-ddc3-438f-80f6-277c5c8e139d",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
