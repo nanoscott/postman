@@ -2080,7 +2080,7 @@
                 }
               ]
             },
-            "description": "This is a call to pay an invoice, between the accounts and for the amount on the invoice being paid. "
+            "description": "This is a call to pay an invoice. "
           },
           "response": []
         }
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "cadba55a-968f-4eb6-806b-319eb53eb2e9",
+      "id": "bbdedfdb-e17f-40ea-b784-92011fba3f78",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
