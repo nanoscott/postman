@@ -888,8 +888,8 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "username": "admin@nanopay.net",
-                "password": "adminAb1"
+                "password": "{{admin_password}}",
+                "username": "{{admin_email}}"
               }
             },
             "method": "DELETE",
@@ -2668,7 +2668,7 @@
   ],
   "variable": [
     {
-      "id": "36ed7a5d-7d79-4da6-aa5c-a7481b6fa076",
+      "id": "218fd37a-2989-4b86-9eff-dd187d1df20e",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
