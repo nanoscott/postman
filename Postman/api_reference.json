@@ -664,7 +664,7 @@
     {
       "_postman_id": "293f1464-8b3b-476b-bbdf-b5280f49bb96",
       "name": "Business",
-      "description": "A business is an entity on behalf of which multiple users can act. A business is associated with the company name provided by the user who first creates it.\n\nThe business object allows business information to be updated and retrieved.  The body parameters refer to the business as the 'organization'.",
+      "description": "A business is an entity on behalf of which multiple users can act.  A business is associated with the company name provided by the user who first creates it.\n\nThe business object allows business information to be updated and retrieved.  The body parameters refer to the business as the 'organization'.",
       "item": [
         {
           "_postman_id": "d6c1a26e-720e-4fbf-82cf-62f23e79d7af",
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "5e9b2040-309c-4c6a-a473-ca10229d6198",
+      "id": "9f3ec530-1c12-48ff-8cec-d8a7f7421d8c",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
