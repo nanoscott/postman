@@ -281,7 +281,7 @@
                 }
               ]
             },
-            "description": "## **Create a User**\n\nCreates a user object.\n\n**Note:** \n1. Creating a user object also creates a Business object for the user. The \u2018organization\u2019 is used as the business name and all the user data is copied over to the business as well.\n2. Email verification will be prompted after the object is created.\n\n| Body Parameters | Description |\n| ---- | ---- |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address of the entity. |\n| **desiredPassword** | The password entered by the entity. |\n| **organization** | The company or business name with which the entity wishes to be associated. |\n"
+            "description": "## **Create a User**\n\nCreates a user object.\n\n**Note:** \n1. Creating a user object also creates a business object for the user. The \u2018organization\u2019 is used as the business name and all the user data is copied over to the business as well.\n2. Email verification will be prompted after the object is created.\n\n| Body Parameters | Description |\n| ---- | ---- |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address of the entity. |\n| **desiredPassword** | The password entered by the entity. |\n| **organization** | The company or business name with which the entity wishes to be associated. |\n"
           },
           "response": []
         },
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "12b9fc04-99eb-483e-9ffc-83bdda845ac0",
+      "id": "7d65a2f4-74ed-4faa-ab16-4ec1f041cf89",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
