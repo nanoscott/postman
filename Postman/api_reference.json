@@ -827,7 +827,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.model.Business\",\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"Sample Organization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"Sample Organization\",\n    \"website\": \"\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\"\n}"
+              "raw": "{\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"Sample Organization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"Sample Organization\",\n    \"website\": \"\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\"\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=businessDAO&cmd=put&format=json&actAs={{user_business_id}}",
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "d35c3e44-1654-4d24-a2f4-60cb0bf766c3",
+      "id": "af8f1484-b807-4421-aa3b-7ebe2e442479",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
