@@ -899,12 +899,10 @@
               "raw": ""
             },
             "url": {
-              "raw": "http://localhost:8080/service/dig?dao=businessDAO&cmd=remove&format=json&id={{business_id_to_delete}}",
-              "protocol": "http",
+              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=remove&format=json&id={{business_id_to_delete}}",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "8080",
               "path": [
                 "service",
                 "dig"
@@ -2668,7 +2666,7 @@
   ],
   "variable": [
     {
-      "id": "218fd37a-2989-4b86-9eff-dd187d1df20e",
+      "id": "f1632bf5-2c33-415d-a39e-f4564c457dc3",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
