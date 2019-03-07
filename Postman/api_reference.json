@@ -2111,7 +2111,7 @@
     {
       "_postman_id": "4a9630fa-131b-4f88-977c-cab44fa8e5ee",
       "name": "Help",
-      "description": "Use this Help for additional information beyond the core functions outlined in this API Reference.\n\n\n",
+      "description": "Use this Help for additional information beyond the core functions of this API.\n\n\n",
       "item": [
         {
           "_postman_id": "6fa49f76-2614-4ce0-9d14-d8e95d0a518f",
@@ -2673,7 +2673,7 @@
   ],
   "variable": [
     {
-      "id": "91053803-54ee-467d-b3d1-96492a37826e",
+      "id": "4cf67103-1fae-4548-9bc3-1e0eeca3a4d3",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
