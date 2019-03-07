@@ -9,7 +9,7 @@
     {
       "_postman_id": "1cb87838-9f3e-4e45-b2df-66a810cbe066",
       "name": "Authentication",
-      "description": "Authentication is how the client proves its identity to the server.  \n\nThe nanopay API uses three methods for authentication:\n\n1. Username and Password Authentication\n2. API Key and Secret Authentication\n3. Session ID Authentication\n\n**HTTPS and TLS Encryption:**\n* All API requests must be made over a secure TLS channel such as an HTTPS session. \n* Calls made over plain HTTP will fail. \n* API requests without authentication will also fail.",
+      "description": "Authentication is how the client proves its identity to the server.  \n\nThe **nanopay API** uses three methods for authentication:\n\n1. Username and Password Authentication\n2. API Key and Secret Authentication\n3. Session ID Authentication\n\n**HTTPS and TLS Encryption:**\n* All API requests must be made over a secure TLS channel such as an HTTPS session. \n* Calls made over plain HTTP will fail. \n* API requests without authentication will also fail.",
       "item": [
         {
           "_postman_id": "df14cc99-939f-48a4-9e93-db23e1f850ad",
@@ -2666,7 +2666,7 @@
   ],
   "variable": [
     {
-      "id": "2b347244-78aa-4a51-92ef-869290c86662",
+      "id": "01c2cdb2-a68f-4561-be03-f955462e2bcf",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
