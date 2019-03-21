@@ -2023,6 +2023,24 @@
                 ],
                 "type": "text/javascript"
               }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "7be4ad47-ce7b-4f9d-98b9-62a196a7b825",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "console.log(\"Submitted invoice with ID: \" + jsonData.id + \" for payment\")",
+                  "pm.environment.set(\"invoice_id\", jsonData.id);",
+                  "",
+                  "// Test for email address",
+                  "pm.test(\"Test Payment Method NONE\", function () {",
+                  "    console.log(\"Current payment method \" + jsonData.paymentMethod);",
+                  "    pm.expect(jsonData.paymentMethod).to.eql(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
             }
           ],
           "request": {
@@ -2679,7 +2697,7 @@
   ],
   "variable": [
     {
-      "id": "b1a54e45-9d5b-4ff2-849a-e7f5c7dd6bfd",
+      "id": "f432d1c8-9e08-455d-b43b-f288be599963",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
