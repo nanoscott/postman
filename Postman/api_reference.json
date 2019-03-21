@@ -2031,12 +2031,11 @@
                 "exec": [
                   "var jsonData = pm.response.json();",
                   "console.log(\"Submitted invoice with ID: \" + jsonData.id + \" for payment\")",
-                  "pm.environment.set(\"invoice_id\", jsonData.id);",
                   "",
                   "// Test for email address",
-                  "pm.test(\"Test Payment Method NONE\", function () {",
+                  "pm.test(\"Test Payment Method PENDING\", function () {",
                   "    console.log(\"Current payment method \" + jsonData.paymentMethod);",
-                  "    pm.expect(jsonData.paymentMethod).to.eql(0);",
+                  "    pm.expect(jsonData.paymentMethod).to.eql(4);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -2697,7 +2696,7 @@
   ],
   "variable": [
     {
-      "id": "f432d1c8-9e08-455d-b43b-f288be599963",
+      "id": "1cf76d37-a212-4fff-969f-f40b6b411c3b",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
