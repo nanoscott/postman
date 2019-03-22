@@ -255,6 +255,7 @@
                   "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
                   "});",
                   "",
+                  "// Set the business as compliant and onboarded",
                   "pm.sendRequest({",
                   "    url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=put&format=json',",
                   "    method: 'PUT',",
@@ -2734,7 +2735,7 @@
   ],
   "variable": [
     {
-      "id": "34a17ac7-f7f6-4071-9774-57b5f71daf10",
+      "id": "3cb7f554-2539-4b03-ab02-02ddff8619fc",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
