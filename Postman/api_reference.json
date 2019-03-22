@@ -239,6 +239,7 @@
                   "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
                   "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
                   "",
+                  "// Set the user as compliant with a verified email",
                   "pm.sendRequest({",
                   "    url: pm.environment.get(\"url\") + '/service/dig?dao=userDAO&cmd=put&format=json',",
                   "    method: 'PUT',",
@@ -2733,7 +2734,7 @@
   ],
   "variable": [
     {
-      "id": "d59e760e-9e0f-4d89-be6a-96beb98ec416",
+      "id": "34a17ac7-f7f6-4071-9774-57b5f71daf10",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
