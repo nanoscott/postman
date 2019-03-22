@@ -235,7 +235,7 @@
                   "    }",
                   "}, function (err, res) {",
                   "    businessUserId = res.json()[0].id;",
-                  "    pm.environment.set(\"user_business_id\", res.json()[0].id);",
+                  "    pm.environment.set(\"user_business_id\", businessUserId);",
                   "    console.log(\"User Business ID: \" + pm.environment.get(\"user_business_id\"));",
                   "});",
                   "",
@@ -255,7 +255,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: jsonData.id, compliance: 2, onboarded: true, emailVerified: true } )",
+                  "        raw: JSON.stringify({ id: userId, compliance: 2, onboarded: true, emailVerified: true } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
@@ -2741,7 +2741,7 @@
   ],
   "variable": [
     {
-      "id": "f832ca1f-6f7f-4d93-9c11-aab44619df98",
+      "id": "9f406ede-95a6-4dff-b089-ddb3a26d1ed3",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
