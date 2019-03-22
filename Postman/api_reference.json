@@ -1038,8 +1038,8 @@
                 "exec": [
                   "let jsonData = pm.response.json();",
                   "let accountId = jsonData.id;",
-                  "console.log(\"Created account with ID: \" + jsonData.id)",
-                  "pm.environment.set(\"account_id\", jsonData.id);",
+                  "console.log(\"Created account with ID: \" + accountId)",
+                  "pm.environment.set(\"account_id\", accountId);",
                   "",
                   "// retrieve business user ID later",
                   "let businessUserId = \"\";",
@@ -2798,7 +2798,7 @@
   ],
   "variable": [
     {
-      "id": "a3cffd2d-1f5b-4e61-a390-e310eb9d1e58",
+      "id": "861fd189-590e-4830-83e1-73894d12cadb",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
