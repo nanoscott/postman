@@ -244,7 +244,7 @@
                   "    url: pm.environment.get(\"url\") + '/service/dig?dao=userDAO&cmd=put&format=json',",
                   "    method: 'PUT',",
                   "    header: {",
-                  "              'authorization': 'Basic ' + base64,",
+                  "              'authorization': 'Basic ' + adminBase64,",
                   "              'content-type': 'application/json'",
                   "    },",
                   "    body: {",
@@ -260,7 +260,7 @@
                   "    url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=put&format=json',",
                   "    method: 'PUT',",
                   "    header: {",
-                  "              'authorization': 'Basic ' + base64,",
+                  "              'authorization': 'Basic ' + adminBase64,",
                   "              'content-type': 'application/json'",
                   "    },",
                   "    body: {",
@@ -2735,7 +2735,7 @@
   ],
   "variable": [
     {
-      "id": "3cb7f554-2539-4b03-ab02-02ddff8619fc",
+      "id": "341bad3d-1cd0-45bc-8299-80dd98458e4d",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
