@@ -234,6 +234,7 @@
                   "    console.log(\"User Business ID: \" + pm.environment.get(\"user_business_id\"));",
                   "});",
                   "",
+                  "// Set the admin credentials",
                   "let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
                   "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
                   "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
@@ -2732,7 +2733,7 @@
   ],
   "variable": [
     {
-      "id": "0f420c17-180b-4a82-8f64-64e772541171",
+      "id": "d59e760e-9e0f-4d89-be6a-96beb98ec416",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
