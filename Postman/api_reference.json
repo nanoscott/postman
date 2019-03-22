@@ -1047,8 +1047,6 @@
                   "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
                   "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
                   "    ",
-                  "",
-                  "    ",
                   "// Set the account as compliant and onboarded",
                   "pm.sendRequest({",
                   "    url: pm.environment.get(\"url\") + '/service/dig?dao=accountDAO&cmd=put&format=json',",
@@ -1059,7 +1057,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: accountId, compliance: 2, onboarded: true, emailVerified: true } )",
+                  "        raw: JSON.stringify({ id: accountId, compliance: 2 } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for account: \" + accountId);",
@@ -1150,9 +1148,32 @@
               "script": {
                 "id": "8891c9b4-c9ff-4b7f-a875-833002e23263",
                 "exec": [
-                  "var jsonData = pm.response.json();",
-                  "console.log(\"Created business account with ID: \" + jsonData.id)",
-                  "pm.environment.set(\"business_account_id\", jsonData.id);"
+                  "let jsonData = pm.response.json();",
+                  "let businessAccountId = jsonData.id;",
+                  "console.log(\"Created business account with ID: \" + businessAccountId)",
+                  "pm.environment.set(\"business_account_id\", businessAccountId);",
+                  "",
+                  "// Set the admin credentials",
+                  "let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
+                  "console.log(\"Admin Auth String: \" + adminAuthString);",
+                  "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
+                  "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
+                  "    ",
+                  "// Set the account as compliant and onboarded",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=accountDAO&cmd=put&format=json',",
+                  "    method: 'PUT',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + adminBase64,",
+                  "              'content-type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({ id: businessAccountId, verified: true, compliance: 2 } )",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    console.log(\"Set compliance status for account: \" + businessAccountId);",
+                  "});"
                 ],
                 "type": "text/javascript"
               }
@@ -2767,7 +2788,7 @@
   ],
   "variable": [
     {
-      "id": "3138c45c-0ff7-46b1-8f28-a4f9eeebffcd",
+      "id": "830ce71a-49ed-4831-83ff-bc8d5352577a",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
