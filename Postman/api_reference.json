@@ -1062,7 +1062,7 @@
                   "        raw: JSON.stringify({ id: accountId, compliance: 2, onboarded: true, emailVerified: true } )",
                   "    }",
                   "}, function (err, res) {",
-                  "    console.log(\"Set compliance status for business: \" + pm.environment.get(\"user_business_id\"));",
+                  "    console.log(\"Set compliance status for account: \" + accountId);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -2767,7 +2767,7 @@
   ],
   "variable": [
     {
-      "id": "399cf672-ad63-4727-86ce-9b595854b4b3",
+      "id": "3138c45c-0ff7-46b1-8f28-a4f9eeebffcd",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
