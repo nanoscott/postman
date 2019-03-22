@@ -214,6 +214,7 @@
                   "",
                   "// retrieve the user ID",
                   "console.log(\"Created user with ID: \" + jsonData.id)",
+                  "let userId = jsonData.id;",
                   "pm.environment.set(\"user_id\", jsonData.id);",
                   "",
                   "// retrieve business ID here instead of later on",
@@ -236,6 +237,7 @@
                   "",
                   "// Set the admin credentials",
                   "let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
+                  "console.log(\"Admin Auth String: \" + adminAuthString);",
                   "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
                   "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
                   "",
@@ -249,7 +251,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_id\"), compliance: 2, onboarded: true, emailVerified: true } )",
+                  "        raw: JSON.stringify({ id: jsonData.id, compliance: 2, onboarded: true, emailVerified: true } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
@@ -2735,7 +2737,7 @@
   ],
   "variable": [
     {
-      "id": "341bad3d-1cd0-45bc-8299-80dd98458e4d",
+      "id": "1fa03490-4bc2-465c-bd69-ec3af25deab2",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
