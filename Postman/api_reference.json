@@ -1053,11 +1053,12 @@
                   "    method: 'PUT',",
                   "    header: {",
                   "              'authorization': 'Basic ' + adminBase64,",
-                  "              'content-type': 'application/json'",
+                  "              'content-type': 'application/json',",
+                  "              'Cookie': 'session='",
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: accountId, compliance: 2 } )",
+                  "        raw: JSON.stringify({ id: accountId, class: \"net.nanopay.bank.CABankAccount\", verified: true, compliance: 2 } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for account: \" + accountId);",
@@ -2788,7 +2789,7 @@
   ],
   "variable": [
     {
-      "id": "19f47a29-912e-4be4-877e-f7e677af2dac",
+      "id": "81b2c4d9-d028-4883-8b7b-0a39eeaa477c",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
