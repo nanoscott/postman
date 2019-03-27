@@ -1054,7 +1054,7 @@
                   "    header: {",
                   "              'authorization': 'Basic ' + adminBase64,",
                   "              'content-type': 'application/json',",
-                  "              'Cookie': 'session='",
+                  "              'Cookie': 'sessionId='",
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
@@ -2789,7 +2789,7 @@
   ],
   "variable": [
     {
-      "id": "81b2c4d9-d028-4883-8b7b-0a39eeaa477c",
+      "id": "e1d406f1-12cf-49a6-9a87-a06983d306c6",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
