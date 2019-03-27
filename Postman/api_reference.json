@@ -1046,7 +1046,9 @@
                   "console.log(\"Admin Auth String: \" + adminAuthString);",
                   "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
                   "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
-                  "    ",
+                  "",
+                  "pm.cookies.clear();",
+                  "",
                   "// Set the account as compliant and onboarded",
                   "pm.sendRequest({",
                   "    url: pm.environment.get(\"url\") + '/service/dig?dao=accountDAO&cmd=put&format=json',",
@@ -2789,7 +2791,7 @@
   ],
   "variable": [
     {
-      "id": "e1d406f1-12cf-49a6-9a87-a06983d306c6",
+      "id": "6e5d5081-4cd4-4d26-8030-9e9ae1a73aaa",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
