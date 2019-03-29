@@ -2234,7 +2234,7 @@
         {
           "_postman_id": "6fa49f76-2614-4ce0-9d14-d8e95d0a518f",
           "name": "Query Parameter",
-          "description": "This is a query syntax that allows for filtering of entities within a DAO where access is based on the fields in the entity. \n\n**About the query syntac**\n\n* \u2018q\u2019 is the query parameter for retrieval requests (i.e. cmd=select).\n* is composed of HTML encoded strings\n* is composed of predicates (e.g. x =< y) linked by logical operators (e.g. and, or)\n* used to filter on retrieval (i.e. q=\u201dxxx\u201d)\n* used to get a specific entity or all entities with specific values\n\n**Additional Reference:** [Google-like specification for the common query language](https://github.com/foam-framework/foam/wiki/MQL---Query-Language)\n\n",
+          "description": "This is a query syntax that allows for filtering of entities within a DAO where access is based on the fields in the entity. \n\n**About the query syntac**\n\n* \u2018q\u2019 is the query parameter for retrieval requests (i.e. cmd=select).\n* is composed of HTML encoded strings\n* is composed of predicates (e.g. x =< y) linked by logical operators (e.g. and, or)\n* used to filter on retrieval (i.e. q=\u201dxxx\u201d)\n* used to get a specific entity or all entities with specific values\n\n**Additional Reference:** [Google-like specifications for the common query language](https://github.com/foam-framework/foam/wiki/MQL---Query-Language)\n\n",
           "item": [],
           "event": [
             {
@@ -2791,7 +2791,7 @@
   ],
   "variable": [
     {
-      "id": "a67746af-a67f-4035-9cc2-48ad7c7c0d4e",
+      "id": "913c9372-24b6-49b1-9d1d-af44aa39cc00",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
