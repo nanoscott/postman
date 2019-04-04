@@ -1172,7 +1172,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: businessAccountId, verified: true, compliance: 2 } )",
+                  "        raw: JSON.stringify({ class: \"net.nanopay.bank.CABankAccount\", id: businessAccountId, verified: true, compliance: 2 } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for account: \" + businessAccountId);",
@@ -2791,7 +2791,7 @@
   ],
   "variable": [
     {
-      "id": "cfdf3b22-42ef-450e-9332-06a8c406d7cf",
+      "id": "38e5c9dc-be08-4299-ab3d-7cda33866a4b",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string",
