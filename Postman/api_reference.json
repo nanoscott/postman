@@ -739,116 +739,6 @@
             "description": "## **Delete User**\n\nDeletes a user.\n"
           },
           "response": []
-        },
-        {
-          "name": "Delete User Copy",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "id": "f29d6886-1928-4204-abf4-2bf30f9ae4a9",
-                "exec": [
-                  "// Check to see that the response contains 'success'"
-                ],
-                "type": "text/javascript"
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "id": "0c0a4951-8883-435e-b4f5-7e937a131853",
-                "exec": [
-                  "// Set a random email address to create",
-                  "let emailAddress = \"todelete\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\";",
-                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
-                  "",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json',",
-                  "    method: 'POST',",
-                  "    header: {",
-                  "        'authorization': 'Basic ' + pm.environment.get(\"authorization\"),",
-                  "        'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ firstName: \"toDeleteFirstName\", lastName: \"toDeleteLastName\", email: emailAddress, desiredPassword: password, organization: \"toDeleteOrganization\" } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    pm.environment.set(\"user_id_to_delete\", res.json().id);",
-                  "    console.log(\"Create User \" + pm.environment.get(\"user_id_to_delete\") + \" to delete...\");",
-                  "    ",
-                  "    // retrieve business ID to delete",
-                  "    let authString = emailAddress + \":\" + password;",
-                  "    console.log(\"Auth String: \" + authString);",
-                  "    const encoding = CryptoJS.enc.Utf8.parse(authString);",
-                  "    const base64 = CryptoJS.enc.Base64.stringify(encoding);",
-                  "    ",
-                  "    pm.sendRequest({",
-                  "        url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=select&format=json&q=email=' + emailAddress,",
-                  "        method: 'GET',",
-                  "        header: {",
-                  "                  'authorization': 'Basic ' + base64,",
-                  "                  'content-type': 'application/json'",
-                  "        }",
-                  "    }, function (err01, res01) {",
-                  "        pm.environment.set(\"business_id_to_delete\", res01.json()[0].id);",
-                  "        console.log(\"Business ID to Delete: \" + pm.environment.get(\"business_id_to_delete\"));",
-                  "    });",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "_postman_id": "718f2600-d08e-45b9-8a30-76a84cb7a73a",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "basic",
-              "basic": {
-                "username": "admin@nanopay.net",
-                "password": "adminAb1"
-              }
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/service/dig?dao=userDAO&cmd=remove&format=json&id={{user_id_to_delete}}",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "service",
-                "dig"
-              ],
-              "query": [
-                {
-                  "key": "dao",
-                  "value": "userDAO",
-                  "description": "The DAO being accessed."
-                },
-                {
-                  "key": "cmd",
-                  "value": "remove",
-                  "description": "The command being executed."
-                },
-                {
-                  "key": "format",
-                  "value": "json",
-                  "description": "The format of the response."
-                },
-                {
-                  "key": "id",
-                  "value": "{{user_id_to_delete}}",
-                  "description": "The ID of the entity to be deleted in the DAO."
-                }
-              ]
-            },
-            "description": "## **Delete User**\n\nDeletes a user.\n"
-          },
-          "response": []
         }
       ],
       "_postman_id": "a31ba738-2498-48d0-a188-b202164e8b15",
@@ -2852,7 +2742,7 @@
   ],
   "variable": [
     {
-      "id": "60c5c2e5-6a2a-41ae-afd0-c3dc3a8b5d54",
+      "id": "c768e0a0-cf8f-469b-881e-0592b1e38c3e",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
