@@ -666,6 +666,79 @@
             "description": "## **Delete User**\n\nDeletes a user.\n"
           },
           "response": []
+        },
+        {
+          "name": "Retrieve Current User Copy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "70d9ce20-920b-43f5-b6d7-f185d9b4b8eb",
+                "exec": [
+                  "// Test for email address",
+                  "pm.test(\"Test Email Address Returned\", function () {",
+                  "    var emailAddress = pm.environment.get(\"user_email\"); ",
+                  "    var jsonData = pm.response.json();",
+                  "    data = jsonData.filter(function (d) {",
+                  "      return (d.email === emailAddress);",
+                  "    });",
+                  "    console.log(\"Found \" + data.length + \" users with \" + data[0].email + \" email address\");",
+                  "    pm.expect(data[0].email).to.eql(emailAddress);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "_postman_id": "24a56613-c078-4628-9311-d61c4b1e87df",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{user_password}}",
+                "username": "{{user_email}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=email={{user_email}}%20AND%type:User",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "userDAO",
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "select",
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "description": "The format of the response."
+                },
+                {
+                  "key": "q",
+                  "value": "email={{user_email}}%20AND%type:User",
+                  "description": "The query parameter for retrieval requests."
+                }
+              ]
+            },
+            "description": "## **Retrieve Current User**\n\nQueries the server to retrieve a user from the current set of users.\n"
+          },
+          "response": []
         }
       ],
       "_postman_id": "a31ba738-2498-48d0-a188-b202164e8b15",
@@ -2669,7 +2742,7 @@
   ],
   "variable": [
     {
-      "id": "075fc59c-f89c-4b02-b527-10a943deb37f",
+      "id": "204c6369-7c90-4bd2-aaa2-a73ad51e7637",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
