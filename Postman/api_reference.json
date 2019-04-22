@@ -666,6 +666,150 @@
             "description": "## **Delete User**\n\nDeletes a user.\n"
           },
           "response": []
+        },
+        {
+          "name": "Create User Copy",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "aedb3863-2e58-483d-8bb7-e842a6b01ce8",
+                "exec": [
+                  "// Set a random email address to create",
+                  "let emailAddress = \"ablii\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\"",
+                  "pm.environment.set(\"user_email\", emailAddress);",
+                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
+                  "pm.environment.set(\"user_password\", password);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f326459b-ba2c-437e-b97b-bdb155862a06",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// retrieve the user ID",
+                  "let userId = jsonData.id;",
+                  "console.log(\"Created user with ID: \" + userId)",
+                  "pm.environment.set(\"user_id\", userId);",
+                  "",
+                  "// retrieve business user ID later",
+                  "let businessUserId = \"\";",
+                  "",
+                  "// Set the user credentials",
+                  "let authString = pm.environment.get(\"user_email\") + \":\" + pm.environment.get(\"user_password\");",
+                  "console.log(\"Auth String: \" + authString);",
+                  "const encoding = CryptoJS.enc.Utf8.parse(authString);",
+                  "const base64 = CryptoJS.enc.Base64.stringify(encoding);",
+                  "",
+                  "// Set the admin credentials",
+                  "let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
+                  "console.log(\"Admin Auth String: \" + adminAuthString);",
+                  "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
+                  "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
+                  "    ",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=select&format=json&q=email=' + pm.environment.get(\"user_email\") + '%20AND%type:Business',",
+                  "    method: 'GET',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + base64,",
+                  "              'content-type': 'application/json'",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    // retrieve business ID here instead of later on",
+                  "    businessUserId = res.json()[0].id;",
+                  "    pm.environment.set(\"user_business_id\", businessUserId);",
+                  "    console.log(\"User Business ID: \" + pm.environment.get(\"user_business_id\"));",
+                  "    ",
+                  "    // Set the business as compliant and onboarded",
+                  "    pm.sendRequest({",
+                  "        url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=put&format=json',",
+                  "        method: 'PUT',",
+                  "        header: {",
+                  "                  'authorization': 'Basic ' + adminBase64,",
+                  "                  'content-type': 'application/json'",
+                  "        },",
+                  "        body: {",
+                  "            mode: 'raw',",
+                  "            raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2, onboarded: true, emailVerified: true } )",
+                  "        }",
+                  "    }, function (err, res) {",
+                  "        console.log(\"Set compliance status for business: \" + pm.environment.get(\"user_business_id\"));",
+                  "    });",
+                  "});",
+                  "",
+                  "// Set the user as compliant with a verified email",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=userDAO&cmd=put&format=json',",
+                  "    method: 'PUT',",
+                  "    header: {",
+                  "              'authorization': 'Basic ' + adminBase64,",
+                  "              'content-type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({ id: userId, compliance: 2, onboarded: true, emailVerified: true } )",
+                  "    }",
+                  "}, function (err, res) {",
+                  "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "_postman_id": "758eed9d-5fdb-48e6-8a67-704508861e15",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{user_email}}\",\n    \"desiredPassword\": \"{{user_password}}\",\n    \"organization\": \"Sample Organization\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "dig"
+              ],
+              "query": [
+                {
+                  "key": "dao",
+                  "value": "smeBusinessRegistrationDAO",
+                  "description": "The DAO being accessed."
+                },
+                {
+                  "key": "cmd",
+                  "value": "put",
+                  "description": "The command being executed."
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "description": "The format of the response."
+                }
+              ]
+            },
+            "description": "## **Create a User**\n\nCreates a user.\n\n**Note:** \n1. Creating a user also creates a business for the user. The \u2018organization\u2019 is used as the business name and all the user data is copied over to the business as well.\n2. Email verification will be prompted after the user is created.\n\n| Body Parameters | Description |\n| ---- | ---- |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **email** | The email address of the entity. |\n| **desiredPassword** | The password entered by the entity. |\n| **organization** | The company or business name with which the entity wishes to be associated. |\n"
+          },
+          "response": []
         }
       ],
       "_postman_id": "a31ba738-2498-48d0-a188-b202164e8b15",
@@ -1028,7 +1172,7 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ class: \"net.nanopay.bank.CABankAccount\", id: accountId, verified: true, compliance: 2 } )",
+                  "        raw: JSON.stringify({ class: \"net.nanopay.bank.CABankAccount\", id: accountId, status: 1, compliance: 2 } )",
                   "    }",
                   "}, function (err, res) {",
                   "    console.log(\"Set compliance status for account: \" + accountId);",
@@ -2669,7 +2813,7 @@
   ],
   "variable": [
     {
-      "id": "0e8b4d5c-f7b8-4a5d-afd7-ab8958174b5e",
+      "id": "257891c1-ed1b-4637-a335-24f8e39604d6",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
