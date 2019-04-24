@@ -739,79 +739,6 @@
             "description": "## **Delete User**\n\nDeletes a user.\n"
           },
           "response": []
-        },
-        {
-          "name": "Retrieve All Users Copy",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "id": "3e157753-186d-4356-98fb-69b8f740cfd0",
-                "exec": [
-                  "// Test for email address",
-                  "pm.test(\"Test Email Address Returned\", function () {",
-                  "    var emailAddress = pm.environment.get(\"user_email\"); ",
-                  "    var jsonData = pm.response.json();",
-                  "    data = jsonData.filter(function (d) {",
-                  "      return (d.email === emailAddress);",
-                  "    });",
-                  "    console.log(\"Found \" + data.length + \" users with \" + data[0].email + \" email address\");",
-                  "    pm.expect(data[0].email).to.eql(emailAddress);",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "_postman_id": "1e79cfec-b8a2-4ace-b180-dd10de9d33e6",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "basic",
-              "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
-              }
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=type:User",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "service",
-                "dig"
-              ],
-              "query": [
-                {
-                  "key": "dao",
-                  "value": "userDAO",
-                  "description": "The DAO being accessed."
-                },
-                {
-                  "key": "cmd",
-                  "value": "select",
-                  "description": "The command being executed."
-                },
-                {
-                  "key": "format",
-                  "value": "json",
-                  "description": "The format of the response."
-                },
-                {
-                  "key": "q",
-                  "value": "type:User",
-                  "description": "The query parameter for retrieval requests."
-                }
-              ]
-            },
-            "description": "## **Retrieve All Users**\n\nQueries the server to retrieve all users from within the system to which the user has access. This will be restricted to \u2018user\u2019 through a [query parameter](https://nanopay.postman.co/collections/5612686-728633b2-091c-4fac-8daa-837a56c94eb5?workspace=3a59dfdf-e491-4d2b-9879-375b7278914f#6fa49f76-2614-4ce0-9d14-d8e95d0a518f).\n\n"
-          },
-          "response": []
         }
       ],
       "_postman_id": "a31ba738-2498-48d0-a188-b202164e8b15",
@@ -2815,7 +2742,7 @@
   ],
   "variable": [
     {
-      "id": "d8bdc684-ac73-4d5f-aee8-b0d41ee31476",
+      "id": "fbfd4f06-f68d-4fa2-a441-709754b82886",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
