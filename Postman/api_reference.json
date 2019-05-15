@@ -52,7 +52,15 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ firstName: \"initialFirstName\", lastName: \"initialLastName\", email: pm.environment.get(\"email\"), desiredPassword: pm.environment.get(\"password\"), organization: \"initialOrganization\" } )",
+                  "        raw: JSON.stringify({ ",
+                  "            firstName: \"initialFirstName\", ",
+                  "            lastName: \"initialLastName\", ",
+                  "            email: pm.environment.get(\"email\"), ",
+                  "            desiredPassword: pm.environment.get(\"password\"), ",
+                  "            organization: \"initialOrganization\",",
+                  "            group: \"sme\",",
+                  "            businessAddress: { countryId: \"CA\" }",
+                  "            } )",
                   "    }",
                   "}, function (err, res) {",
                   "    pm.environment.set(\"id\", res.json().id);",
@@ -297,7 +305,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{user_email}}\",\n    \"desiredPassword\": \"{{user_password}}\",\n    \"organization\": \"Sample Organization\"\n}"
+              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{user_email}}\",\n    \"desiredPassword\": \"{{user_password}}\",\n    \"organization\": \"Sample Organization\",\n    \"group\": \"sme\",\n    \"businessAddress\": {\n    \t\"countryId\": \"CA\"\n    }\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json",
@@ -427,79 +435,6 @@
             }
           ],
           "_postman_id": "292e2d77-43c6-4289-84db-bf0aabe41318",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "basic",
-              "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
-              }
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=email={{user_email}}%20AND%type:User",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "service",
-                "dig"
-              ],
-              "query": [
-                {
-                  "key": "dao",
-                  "value": "userDAO",
-                  "description": "The DAO being accessed."
-                },
-                {
-                  "key": "cmd",
-                  "value": "select",
-                  "description": "The command being executed."
-                },
-                {
-                  "key": "format",
-                  "value": "json",
-                  "description": "The format of the response."
-                },
-                {
-                  "key": "q",
-                  "value": "email={{user_email}}%20AND%type:User",
-                  "description": "The query parameter for retrieval requests."
-                }
-              ]
-            },
-            "description": "## **Retrieve Current User**\n\nQueries the server to retrieve a user from the current set of users.\n"
-          },
-          "response": []
-        },
-        {
-          "name": "Retrieve Current User Copy",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "id": "70d9ce20-920b-43f5-b6d7-f185d9b4b8eb",
-                "exec": [
-                  "// Test for email address",
-                  "pm.test(\"Test Email Address Returned\", function () {",
-                  "    var emailAddress = pm.environment.get(\"user_email\"); ",
-                  "    var jsonData = pm.response.json();",
-                  "    data = jsonData.filter(function (d) {",
-                  "      return (d.email === emailAddress);",
-                  "    });",
-                  "    console.log(\"Found \" + data.length + \" users with \" + data[0].email + \" email address\");",
-                  "    pm.expect(data[0].email).to.eql(emailAddress);",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "_postman_id": "24a56613-c078-4628-9311-d61c4b1e87df",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -698,8 +633,8 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "username": "admin@nanopay.net",
-                "password": "adminAb1"
+                "password": "{{admin_password}}",
+                "username": "{{admin_email}}"
               }
             },
             "method": "DELETE",
@@ -2742,7 +2677,7 @@
   ],
   "variable": [
     {
-      "id": "fbfd4f06-f68d-4fa2-a441-709754b82886",
+      "id": "02fab9a3-4ff9-4075-a39a-c0e389251a68",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
