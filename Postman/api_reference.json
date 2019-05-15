@@ -596,7 +596,15 @@
                   "    },",
                   "    body: {",
                   "        mode: 'raw',",
-                  "        raw: JSON.stringify({ firstName: \"toDeleteFirstName\", lastName: \"toDeleteLastName\", email: emailAddress, desiredPassword: password, organization: \"toDeleteOrganization\" } )",
+                  "        raw: JSON.stringify({ ",
+                  "            firstName: \"toDeleteFirstName\", ",
+                  "            lastName: \"toDeleteLastName\", ",
+                  "            email: emailAddress, ",
+                  "            desiredPassword: password, ",
+                  "            organization: \"toDeleteOrganization\",",
+                  "            group: \"sme\",",
+                  "            businessAddress: { countryId: \"CA\" }",
+                  "        } )",
                   "    }",
                   "}, function (err, res) {",
                   "    pm.environment.set(\"user_id_to_delete\", res.json().id);",
@@ -2677,7 +2685,7 @@
   ],
   "variable": [
     {
-      "id": "02fab9a3-4ff9-4075-a39a-c0e389251a68",
+      "id": "7eb797f8-65a7-4dc2-9eab-6e0e1c4470f7",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
