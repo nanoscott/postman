@@ -566,87 +566,6 @@
           "response": []
         },
         {
-          "name": "Update User Copy",
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "id": "e6c28186-a52e-4842-a878-295c12474e2f",
-                "exec": [
-                  "// Change the middle name to something random"
-                ],
-                "type": "text/javascript"
-              }
-            },
-            {
-              "listen": "test",
-              "script": {
-                "id": "0c4863a9-b502-4e7c-92ec-b57004f09f56",
-                "exec": [
-                  "// Check to see that the middle name was updated properly"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "_postman_id": "13d8beea-a909-44a2-a718-181ea5332eb7",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "basic",
-              "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
-              }
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "description": "JSON body content",
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"id\": {{user_id}},\n    \"enabled\": true,\n    \"firstName\": \"updatedFirstName\",\n    \"middleName\": \"updatedMiddleName\",\n    \"lastName\": \"updatedLastName\",\n    \"department\": \"\",\n    \"email\": \"{{user_email}}\",\n    \"language\": \"\",\n    \"timeZone\": \"\",\n    \"note\": \"\",\n    \"isPublic\": true,\n    \"jobTitle\": \"\",\n    \"twoFactorEnabled\": false,\n    \"phone\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"mobile\": {\n        \"verified\": false,\n        \"number\": \"\"\n    }\n}"
-            },
-            "url": {
-              "raw": "{{url}}/service/dig?dao=userDAO&cmd=put&format=json",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "service",
-                "dig"
-              ],
-              "query": [
-                {
-                  "key": "dao",
-                  "value": "userDAO",
-                  "description": "The DAO being accessed."
-                },
-                {
-                  "key": "cmd",
-                  "value": "put",
-                  "description": "The command being executed."
-                },
-                {
-                  "key": "format",
-                  "value": "json",
-                  "description": "The format of the response."
-                }
-              ]
-            },
-            "description": "## **Update User**\n\nUpdates a user by setting the values of the parameters passed. Any parameters not provided are left unchanged. \n\n| Body Parameters | Description |\n| -----: | ----- |\n| **id** | The ID for the entity. |\n| **enabled** | Determines whether the account is active and able to make transactions. |\n| **firstName** | The first name of the entity. |\n| **middleName** | The middle name of the entity. |\n| **lastName** | The last name of the entity. |\n| **department** | The department of the entity. |\n| **email** | The email address associated with the entity.|\n| **language** | The preferred language of the entity. |\n| **timeZone** | The time zone of the entity. |\n| **note** | A note about the entity. |\n| **isPublic** | Whether the entity is publicly searchable. |\n| **jobTitle** | The job title of the entity. |\n| **twoFactorEnabled** | Whether two-factor authentication is enabled for this user. |\n"
-          },
-          "response": []
-        },
-        {
           "name": "Delete User",
           "event": [
             {
@@ -2821,7 +2740,7 @@
   ],
   "variable": [
     {
-      "id": "3ea2c3b6-e3d9-406d-a67e-ab4bc97439eb",
+      "id": "25db9453-cd10-4c75-9cf8-db610c7c2858",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
