@@ -968,70 +968,6 @@
             "description": "## **Delete Business**\n\nDeletes a business (organization)."
           },
           "response": []
-        },
-        {
-          "name": "Retrieve Current Business Copy",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "id": "bbc3dba0-d7f6-4875-a1f0-e005f4ea20c7",
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "_postman_id": "6ff86102-d9d6-47f5-93ac-21f8fe6e26ae",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "basic",
-              "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
-              }
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=select&format=json&q=email={{user_email}}%20AND%type:Business",
-              "host": [
-                "{{url}}"
-              ],
-              "path": [
-                "service",
-                "dig"
-              ],
-              "query": [
-                {
-                  "key": "dao",
-                  "value": "businessDAO",
-                  "description": "The DAO being accessed."
-                },
-                {
-                  "key": "cmd",
-                  "value": "select",
-                  "description": "The command being executed."
-                },
-                {
-                  "key": "format",
-                  "value": "json",
-                  "description": "The format of the response."
-                },
-                {
-                  "key": "q",
-                  "value": "email={{user_email}}%20AND%type:Business",
-                  "description": "The query parameter for retrieval requests."
-                }
-              ]
-            },
-            "description": "## **Retrieve Current Business**\n\nQueries the server for a current business.\n"
-          },
-          "response": []
         }
       ],
       "_postman_id": "293f1464-8b3b-476b-bbdf-b5280f49bb96",
@@ -2804,7 +2740,7 @@
   ],
   "variable": [
     {
-      "id": "84c5d0e2-aca9-4356-ba33-8a979f664c52",
+      "id": "3c4d4b94-1f5d-4332-b634-75defd2bc7c5",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
