@@ -2125,6 +2125,435 @@
       ]
     },
     {
+      "name": "ISO 20022",
+      "item": [
+        {
+          "name": "Fetch the Latest Exchange Rate for a Payment",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "6750e536-6050-467f-9bfb-ef4752a8d116",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "let sourcePrefix = \"pacs\";",
+                  "",
+                  "// setup the email and password for two partners",
+                  "createSmeUser(sourcePrefix, function(p) {",
+                  "    verifyUserCompliance(p, function(r) {",
+                  "        verifyBusinessCompliance(r, function(e) {",
+                  "            createAccount(e, function(f) {",
+                  "              verifyAccountCompliance(e);  ",
+                  "            })",
+                  "        })",
+                  "    })",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "08aa4fb0-2a10-4a7e-b4b6-1308497dcbd5",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "console.log(\"Created quote with ID: \" + jsonData.id)",
+                  "pm.environment.set(\"quote_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "_postman_id": "eee47fc7-8451-42db-afbb-eb3cf556f7a8",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/service/sugar?service=fxService&interfaceName=net.nanopay.fx.FXService&method=getFXRate&sourceCurrency=CAD&targetCurrency=INR&sourceAmount=2000&destinationAmount=0&fxDirection=BUY&valueDate=20190412&user={{pacs_user_id}}&fxProvider=nanopay",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "sugar"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "fxService",
+                  "description": "The service processing the exchange rate."
+                },
+                {
+                  "key": "interfaceName",
+                  "value": "net.nanopay.fx.FXService",
+                  "description": "The interface processing the exchange rate."
+                },
+                {
+                  "key": "method",
+                  "value": "getFXRate",
+                  "description": "The method being called on the service."
+                },
+                {
+                  "key": "sourceCurrency",
+                  "value": "CAD",
+                  "description": "The source currency."
+                },
+                {
+                  "key": "targetCurrency",
+                  "value": "INR"
+                },
+                {
+                  "key": "sourceAmount",
+                  "value": "2000"
+                },
+                {
+                  "key": "destinationAmount",
+                  "value": "0"
+                },
+                {
+                  "key": "fxDirection",
+                  "value": "BUY"
+                },
+                {
+                  "key": "valueDate",
+                  "value": "20190412"
+                },
+                {
+                  "key": "user",
+                  "value": "{{pacs_user_id}}"
+                },
+                {
+                  "key": "fxProvider",
+                  "value": "nanopay"
+                }
+              ]
+            },
+            "description": "This part of the payment flow uses nanopay\u2019s SUGAR endpoint, a unified service gateway endpoint which performs general operations against a web service.\n\nWhen fetching the latest Exchange Rate using SUGAR, the **FX rate**, **expiryTime** and **converted amounts** for the associated payment transfer are returned in the response. Providing either the source amount or destination amount in the original request allows the system to calculate the amount being transferred and save it as a quote for later booking. For example, when the **sourceAmount** and **sourceCurrency** is populated, then the response returns the calculated **targetAmount** in the **targetCurrency**. And vice versa. \n"
+          },
+          "response": [
+            {
+              "id": "5e5900a4-4dff-4d77-9cc8-06565b15a53d",
+              "name": "Fetch the Latest Exchange Rate for a Payment",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/service/sugar?service=fxService&interfaceName=net.nanopay.fx.FXService&method=getFXRate&sourceCurrency=CAD&targetCurrency=INR&sourceAmount=0&destinationAmount=5000&fxDirection=BUY&valueDate=20190412&user=1348&fxProvider=nanopay",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "service",
+                    "sugar"
+                  ],
+                  "query": [
+                    {
+                      "key": "service",
+                      "value": "fxService"
+                    },
+                    {
+                      "key": "interfaceName",
+                      "value": "net.nanopay.fx.FXService"
+                    },
+                    {
+                      "key": "method",
+                      "value": "getFXRate"
+                    },
+                    {
+                      "key": "sourceCurrency",
+                      "value": "CAD"
+                    },
+                    {
+                      "key": "targetCurrency",
+                      "value": "INR"
+                    },
+                    {
+                      "key": "sourceAmount",
+                      "value": "0"
+                    },
+                    {
+                      "key": "destinationAmount",
+                      "value": "5000"
+                    },
+                    {
+                      "key": "fxDirection",
+                      "value": "BUY"
+                    },
+                    {
+                      "key": "valueDate",
+                      "value": "20190412"
+                    },
+                    {
+                      "key": "user",
+                      "value": "1348"
+                    },
+                    {
+                      "key": "fxProvider",
+                      "value": "nanopay"
+                    }
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"class\": \"net.nanopay.fx.FXQuote\",\n    \"expiryTime\": \"2019-04-24T18:50:51.741Z\",\n    \"id\": 12,\n    \"endToEndId\": \"\",\n    \"user\": 0,\n    \"externalId\": \"9b255861da974b549bb53d023a3ac129\",\n    \"status\": \"Quoted\",\n    \"sourceCurrency\": \"CAD\",\n    \"targetCurrency\": \"INR\",\n    \"sourceAmount\": 260053,\n    \"targetAmount\": 5000,\n    \"rate\": 52.0106927011,\n    \"fee\": 1,\n    \"feeCurrency\": \"CAD\",\n    \"paymentMethod\": \"\"\n}\n"
+            }
+          ]
+        },
+        {
+          "name": "Book the Exchange Rate for the Payment",
+          "_postman_id": "528cb65e-cb34-453b-bcaf-069d4d6ed794",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/service/sugar?service=fxService&interfaceName=net.nanopay.fx.FXService&method=acceptFXRate&quoteId={{quote_id}}&user={{pacs_user_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "sugar"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "fxService"
+                },
+                {
+                  "key": "interfaceName",
+                  "value": "net.nanopay.fx.FXService"
+                },
+                {
+                  "key": "method",
+                  "value": "acceptFXRate"
+                },
+                {
+                  "key": "quoteId",
+                  "value": "{{quote_id}}"
+                },
+                {
+                  "key": "user",
+                  "value": "{{pacs_user_id}}"
+                }
+              ]
+            },
+            "description": "This part of the payment flow books the previously fetched FX rate using the returned **quotedId** for the request via the SUGAR interface.\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Initiate the Payment - PACS.008 Request",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "1d4cdc21-d7d1-42a3-9b81-9406edb2b8eb",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "let sourcePrefix = \"debtor\";",
+                  "let destPrefix = \"creditor\"",
+                  "",
+                  "defineSmeUser(sourcePrefix);",
+                  "defineSmeUser(destPrefix);",
+                  "",
+                  "let msgId = \"c11be612a4304a958365f089e9ea\" + Math.floor(1000000 * Math.random());",
+                  "pm.environment.set(\"pacs_msg_id\", msgId);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "3144b1b4-95da-45fd-b099-5642b80a83b6",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "console.log(\"Found create date/time: \" + jsonData.FIToFIPmtStsRpt.OrgnlGrpInfAndSts[0].OrgnlCreDtTm)",
+                  "pm.environment.set(\"pacs_credttm\", jsonData.FIToFIPmtStsRpt.OrgnlGrpInfAndSts[0].OrgnlCreDtTm);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "_postman_id": "9022a580-97f4-4dcc-abcb-75597f4708e2",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content.",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"xmlns\": \"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.06\",\n    \"FIToFICstmrCdtTrf\": {\n        \"GrpHdr\": {\n            \"MsgId\": \"{{pacs_msg_id}}\",\n            \"CreDtTm\": \"2011-10-05T14:48:10.500-05:00\",\n            \"NbOfTxs\": \"1\",\n            \"CtrlSum\": 1,\n            \"SttlmInf\": {\n                \"SttlmMtd\": \"CLRG\",\n                \"ClrSys\": {\n                    \"Cd\": \"LVT\",\n                    \"Prtry\": \"\"\n                }\n            },\n            \"PmtTpInf\": {\n                \"InstrPrty\": \"NORM\",\n                \"LclInstrm\": {\n                    \"Cd\": \"SDVA\",\n                    \"Prtry\": \"\"\n                }\n            }\n        },\n        \"CdtTrfTxInf\": [\n            {\n                \"PmtId\": {\n                    \"InstrId\": \"InstrId\",\n                    \"EndToEndId\": \"9f6a0cec99e54e3f9a4426c5d5900dd4\",\n                    \"TxId\": \"8888\",\n                    \"CrlSysRef\": \"\"\n                },\n                \"IntrBkSttlmAmt\": {\n                    \"Ccy\": \"INR\",\n                    \"text\": 104362\n                },\n                \"InstdAmt\": {\n                    \"Ccy\": \"CAD\",\n                    \"text\": 2000\n                },\n                \"XchgRate\": \"51.7\",\n                \"ChrgBr\": \"SHAR\",\n                \"Dbtr\": {\n                    \"Nm\": \"Debtor\",\n                    \"PstlAdr\": {\n                        \"AdrTp\": \"ADDR\",\n                        \"StrtNm\": \"22 Heron Drive\",\n                        \"BldgNb\": \"111\",\n                        \"PstCd\": \"M5B0A5\",\n                        \"TwnNm\": \"North York\",\n                        \"CtrySubDvsn\": \"Ontario\",\n                        \"Ctry\": \"CA\"\n                    },\n                    \"Id\": {\n                        \"PrvtId\": {\n                            \"DtAndPlcOfBirth\": {\n                                \"BirthDt\": \"1969-06-28T00:00:00.968Z\",\n                                \"CityOfBirth\": \"City\",\n                                \"CtryOfBirth\": \"US\"\n                            }\n                        }\n                    },\n                    \"CtctDtls\": {\n                        \"PhneNb\": \"+1-647-980-5768\",\n                        \"EmailAdr\": \"{{debtor_email}}\"\n                    }\n                },\n                \"DbtrAcct\": {\n                    \"Id\": {\n                        \"Othr\": {\n                            \"Id\": \"12345454510\"\n                        }\n                    }\n                },\n                \"DbtrAgt\": {\n                    \"FinInstnId\": {\n                        \"ClrSysMmbId\": {\n                            \"MmbId\": \"001\"\n                        }\n                    },\n                    \"BrnchId\": {\n                        \"Id\": \"12345\"\n                    }\n                },\n                \"CdtrAgt\": {\n                    \"FinInstnId\": {\n                        \"ClrSysMmbId\": {\n                            \"MmbId\": \"055\"\n                        }\n                    },\n                    \"BrnchId\": {\n                        \"Id\": \"09067\"\n                    }\n                },\n                \"Cdtr\": {\n                    \"Nm\": \"Creditor\",\n                    \"PstlAdr\": {\n                        \"AdrTp\": \"ADDR\",\n                        \"StrtNm\": \"171 Liberty\",\n                        \"BldgNb\": \"111\",\n                        \"PstCd\": \"M2K1E8\",\n                        \"TwnNm\": \"Toronto\",\n                        \"CtrySubDvsn\": \"ON\",\n                        \"Ctry\": \"CA\"\n                    },\n                    \"Id\": {\n                        \"PrvtId\": {\n                            \"DtAndPlcOfBirth\": {\n                                \"BirthDt\": \"1986-06-28T21:25:10.968Z\",\n                                \"CityOfBirth\": \"City\",\n                                \"CtryOfBirth\": \"US\"\n                            }\n                        }\n                    },\n                    \"CtctDtls\": {\n                        \"PhneNb\": \"+1-416-492-8374\",\n                        \"EmailAdr\": \"{{creditor_email}}\"\n                    }\n                },\n                \"CdtrAcct\": {\n                    \"Id\": {\n                        \"Othr\": {\n                            \"Identification\": \"4567891011\"\n                        }\n                    }\n                },\n                \"Purp\": {\n                    \"Prtry\": \"Receipts / Refund of taxes\"\n                },\n                \"RmtInf\": {\n                    \"Ustrd\": \"Company Details No.2\"\n                }\n            }\n        ]\n    }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/pacsMsg?msg=008",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "pacsMsg"
+              ],
+              "query": [
+                {
+                  "key": "msg",
+                  "value": "008"
+                }
+              ]
+            },
+            "description": "This part of the payment flow initiates the payment by creating a transaction within the nanopay system. The accuracy of the payment information is ensured by properly filling in all parts of the payment requests.     \n\nThe **sending system** initiates a **payment funds transfer** by sending a PACS.008 message.\nnanopay then generates a PACS.002 response message after performing the following steps:\n\n1. nanopay adds the sending and receiving users within the system\n1. nanopay adds the sending and receiving bank accounts within the system\n1. nanopay creates a transaction based on the information within the PACS.008 message\n1. In the case where the sending system needs to query the status of the payment, nanopay provides the ability for the sending system to send a PACS.028 message\n \nPACS message body parameters are abbreviated and are at times difficult to understand. As such, developers should refer to the documentation for these fields. However, we do not provide full descriptions of each parameter here, but instead refer developers to [the full PACS message specification for the complete documentation on each of the parameter](https://www.iso20022.org/sites/default/files/documents/general/RTPG/ISO20022_RTPG_pacs00800106_July_2017_v1_1.pdf).\n\n**Notes:**\n* PACS, which stands for Payments Clearing and Settlement, denotes the set of ISO20022 standard messages sent between banks to perform standard operations.\n* Only JSON format is supported for the PACS message payload.\n* There are two types of status for a transaction:\n  1. ACSC - Complete: If the transaction is complete and the funds are deposited into the beneficiary account\n  1. ACSP - Pending: If the transaction is pending deposit into the beneficiary account \n* For full specification of the PACS.008 message,  follow this [link](https://www.iso20022.org/sites/default/files/documents/general/RTPG/ISO20022_RTPG_pacs00800106_July_2017_v1_1.pdf)."
+          },
+          "response": [
+            {
+              "id": "8f860998-5bac-4c28-a6cb-deccc0370f62",
+              "name": "Initiate the Payment - PACS.008 Request",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"xmlns\": \"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.06\",\n    \"FIToFICstmrCdtTrf\": {\n        \"GrpHdr\": {\n            \"MsgId\": \"c11be612a4304a958365f089e9e4753a\",\n            \"CreDtTm\": \"2011-10-05T14:48:10.500-05:00\",\n            \"NbOfTxs\": \"1\",\n            \"CtrlSum\": 1,\n            \"SttlmInf\": {\n                \"SttlmMtd\": \"CLRG\",\n                \"ClrSys\": {\n                    \"Cd\": \"LVT\",\n                    \"Prtry\": \"\"\n                }\n            },\n            \"PmtTpInf\": {\n                \"InstrPrty\": \"NORM\",\n                \"LclInstrm\": {\n                    \"Cd\": \"SDVA\",\n                    \"Prtry\": \"\"\n                }\n            }\n        },\n        \"CdtTrfTxInf\": [\n            {\n                \"PmtId\": {\n                    \"InstrId\": \"InstrId\",\n                    \"EndToEndId\": \"9f6a0cec99e54e3f9a4426c5d5900dd4\",\n                    \"TxId\": \"8888\",\n                    \"CrlSysRef\": \"\"\n                },\n                \"IntrBkSttlmAmt\": {\n                    \"Ccy\": \"INR\",\n                    \"text\": 104362\n                },\n                \"InstdAmt\": {\n                    \"Ccy\": \"CAD\",\n                    \"text\": 2000\n                },\n                \"XchgRate\": \"51.7\",\n                \"ChrgBr\": \"SHAR\",\n                \"Dbtr\": {\n                    \"Nm\": \"aaa\",\n                    \"PstlAdr\": {\n                        \"AdrTp\": \"ADDR\",\n                        \"StrtNm\": \"22 Heron Drive\",\n                        \"BldgNb\": \"111\",\n                        \"PstCd\": \"M5B0A5\",\n                        \"TwnNm\": \"North York\",\n                        \"CtrySubDvsn\": \"Ontario\",\n                        \"Ctry\": \"CA\"\n                    },\n                    \"Id\": {\n                        \"PrvtId\": {\n                            \"DtAndPlcOfBirth\": {\n                                \"BirthDt\": \"1969-06-28T00:00:00.968Z\",\n                                \"CityOfBirth\": \"City\",\n                                \"CtryOfBirth\": \"US\"\n                            }\n                        }\n                    },\n                    \"CtctDtls\": {\n                        \"PhneNb\": \"+1-647-980-5768\",\n                        \"EmailAdr\": \"aaa@nanopay.com\"\n                    }\n                },\n                \"DbtrAcct\": {\n                    \"Id\": {\n                        \"Othr\": {\n                            \"Id\": \"123532443534534\"\n                        }\n                    }\n                },\n                \"DbtrAgt\": {\n                    \"FinInstnId\": {\n                        \"ClrSysMmbId\": {\n                            \"MmbId\": \"001\"\n                        }\n                    },\n                    \"BrnchId\": {\n                        \"Id\": \"12345\"\n                    }\n                },\n                \"CdtrAgt\": {\n                    \"FinInstnId\": {\n                        \"ClrSysMmbId\": {\n                            \"MmbId\": \"055\"\n                        }\n                    },\n                    \"BrnchId\": {\n                        \"Id\": \"09067\"\n                    }\n                },\n                \"Cdtr\": {\n                    \"Nm\": \"bbb\",\n                    \"PstlAdr\": {\n                        \"AdrTp\": \"ADDR\",\n                        \"StrtNm\": \"171 Libery\",\n                        \"BldgNb\": \"111\",\n                        \"PstCd\": \"M2K1E8\",\n                        \"TwnNm\": \"Toronto\",\n                        \"CtrySubDvsn\": \"ON\",\n                        \"Ctry\": \"CA\"\n                    },\n                    \"Id\": {\n                        \"PrvtId\": {\n                            \"DtAndPlcOfBirth\": {\n                                \"BirthDt\": \"1986-06-28T21:25:10.968Z\",\n                                \"CityOfBirth\": \"City\",\n                                \"CtryOfBirth\": \"US\"\n                            }\n                        }\n                    },\n                    \"CtctDtls\": {\n                        \"PhneNb\": \"+1-416-492-8374\",\n                        \"EmailAdr\": \"bbb@nanopay.com\"\n                    }\n                },\n                \"CdtrAcct\": {\n                    \"Id\": {\n                        \"Othr\": {\n                            \"Identification\": \"456532443534534\"\n                        }\n                    }\n                },\n                \"Purp\": {\n                    \"Prtry\": \"Receipts / Refund of taxes\"\n                },\n                \"RmtInf\": {\n                    \"Ustrd\": \"Company Details No.2\"\n                }\n            }\n        ]\n    }\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/service/pacsMsg?msg=008",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "service",
+                    "pacsMsg"
+                  ],
+                  "query": [
+                    {
+                      "key": "msg",
+                      "value": "008"
+                    }
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": null,
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"xmlns\": \"urn:iso:std:iso:20022:tech:xsd:pacs.002.001.09\",\n    \"FIToFIPmtStsRpt\": {\n        \"GrpHdr\": {\n            \"MsgId\": \"9d9de4a4f9c0420f86c6bb2a2b373cb0\",\n            \"CreDtTm\": \"2019-04-29T19:13:32.955Z\"\n        },\n        \"OrgnlGrpInfAndSts\": [\n            {\n                \"OrgnlMsgId\": \"c11be612a4304a958365f089e9e4753a\",\n                \"OrgnlMsgNmId\": \"Pacs.008.001.06\",\n                \"OrgnlCreDtTm\": \"2019-04-05T14:48:10.500Z\",\n                \"OrgnlNbOfTxs\": \"1\",\n                \"OrgnlCtrlSum\": 1,\n                \"GrpSts\": \"ACSP\"\n            }\n        ],\n        \"TxInfAndSts\": [\n            {\n                \"StsId\": \"7667347e9c144ba294ae797d2151be7a\",\n                \"OrgnlInstrId\": \"\",\n                \"OrgnlEndToEndId\": \"9f6a0cec99e54e3f9a4426c5d5900dd4\",\n                \"OrgnlTxId\": \"8888\",\n                \"TxSts\": \"ACSP\",\n                \"AcctSvcrRef\": \"\",\n                \"ClrSysRef\": \"\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Request Payment Status - PACS.028 (Optional)",
+          "_postman_id": "17500e71-ef3c-43f1-90ef-6de8d366f9f3",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "description": "JSON body content.",
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"MsgType\": \"pacs.028.001.001\",\n  \"FIToFIPmtStsReq\": {\n    \"GrpHdr\": {\n      \"MsgId\": \"20160513223041000000008\",\n      \"CreDtTm\": \"2019-04-06T21:25:10.968+0:00\"\n    },\n    \"OrgnlGrpInf\": [\n      {\n        \"OrgnlMsgId\": \"{{pacs_msg_id}}\",\n        \"OrgnlMsgNmId\": \"Pacs.008.001.06\",\n        \"OrgnlCreDtTm\": \"2019-04-06T21:25:10.968+0:00\"\n      }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/service/pacsMsg?msg=028",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "service",
+                "pacsMsg"
+              ],
+              "query": [
+                {
+                  "key": "msg",
+                  "value": "028"
+                }
+              ]
+            },
+            "description": "At any given point, the sending system can request a status update for a given transaction from nanopay by sending a PACS.028 message.\n\nPACS message body parameters are abbreviated and are at times difficult to understand. As such, developers should refer to the documentation for these fields. However, we do not provide full descriptions of each parameter here, but instead refer developers to [the full PACS message specification for the complete documentation on each of the parameter](https://www.iso20022.org/standardsrepository/public/wqt/Description/mx/pacs.028.001.01)."
+          },
+          "response": [
+            {
+              "id": "290c08b3-8e67-4d79-8be7-23113735e6ce",
+              "name": "Request Payment Status - PACS.028 (Optional)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"MsgType\": \"pacs.028.001.001\",\n  \"FIToFIPmtStsReq\": {\n    \"GrpHdr\": {\n      \"MsgId\": \"20160513223041000000008\",\n      \"CreDtTm\": \"2019-04-06T21:25:10.968\"\n    },\n    \"OrgnlGrpInf\": [\n      {\n        \"OrgnlMsgId\": \"c11be612a4304a958365f089e9e4753a\",\n        \"OrgnlMsgNmId\": \"Pacs.008.001.06\",\n        \"OrgnlCreDtTm\": \"2019-04-04T21:25:10.968\"\n      }\n    ]\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/service/pacsMsg?msg=028",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "service",
+                    "pacsMsg"
+                  ],
+                  "query": [
+                    {
+                      "key": "msg",
+                      "value": "028"
+                    }
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": null,
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"xmlns\": \"urn:iso:std:iso:20022:tech:xsd:pacs.002.001.09\",\n    \"FIToFIPmtStsRpt\": {\n        \"GrpHdr\": {\n            \"MsgId\": \"7423e4dbf8da48adb62ec8092be1004e\",\n            \"CreDtTm\": \"2019-04-30T19:29:21.588Z\"\n        },\n        \"OrgnlGrpInfAndSts\": [\n            {\n                \"OrgnlMsgId\": \"c11be612a4304a958365f089e9e4753a\",\n                \"OrgnlMsgNmId\": \"Pacs.008.001.06\",\n                \"OrgnlCreDtTm\": \"2019-04-05T14:48:10.500Z\",\n                \"OrgnlNbOfTxs\": \"\",\n                \"OrgnlCtrlSum\": 0,\n                \"GrpSts\": \"ACSC\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        }
+      ],
+      "_postman_id": "e87bd93f-8bf6-46d4-9290-9703dfa429a9",
+      "description": "nanopay can perform cross-border payments with the introduction of ISO 20022 PACS message support. The ISO 20022 messaging standard includes a robust set of API endpoints and messages. This functionality currently supports cross-border payments between Canada and India.\n\nPayment Flow Supported\n1. Fetch the latest ExchangeRate for the Payment \n1. Book the ExchangeRate for the Payment\n1. Initiate the Payment\n1. Request Status of the Payment (optional)\n\n"
+    },
+    {
       "name": "Help",
       "item": [
         {
@@ -2665,7 +3094,7 @@
   ],
   "variable": [
     {
-      "id": "0f800dfe-8efa-41a5-93f1-8bde4ca5ccdc",
+      "id": "5c159223-e9e2-4f27-af18-20e48e830a5f",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
