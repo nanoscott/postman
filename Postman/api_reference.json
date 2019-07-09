@@ -13,67 +13,29 @@
           "name": "Username and Password Authentication",
           "event": [
             {
-              "listen": "test",
+              "listen": "prerequest",
               "script": {
-                "id": "30a556b6-e0b7-4dad-aa24-25c67a13e189",
+                "id": "e6cbfc8f-6c2a-4c34-8744-0f625f579a01",
                 "exec": [
-                  "// Set the session ID",
-                  "console.log(\"setting session ID to: \" + postman.getResponseCookie(\"sessionId\").value);",
-                  "pm.environment.set(\"session_id\", postman.getResponseCookie(\"sessionId\").value);"
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// Clearing postman cookies",
+                  "clearCookies();",
+                  "",
+                  "// Create initial user",
+                  "createSmeUser('initial');"
                 ],
                 "type": "text/javascript"
               }
             },
             {
-              "listen": "prerequest",
+              "listen": "test",
               "script": {
-                "id": "b508dddc-3984-42bd-8a39-24f4445de642",
+                "id": "3f3292ec-a125-4bb2-9cf8-5db2de1933d7",
                 "exec": [
-                  "pm.cookies.clear();",
-                  "",
-                  "// Set a random email address to create",
-                  "let emailAddress = \"initial\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\";",
-                  "pm.environment.set(\"email\", emailAddress);",
-                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
-                  "pm.environment.set(\"password\", password);",
-                  "",
-                  "console.log(pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json');",
-                  "",
-                  "let developerAuthString = pm.environment.get(\"developer_email\") + \":\" + pm.environment.get(\"developer_password\");",
-                  "const developerEncoding = CryptoJS.enc.Utf8.parse(developerAuthString);",
-                  "const developerBase64 = CryptoJS.enc.Base64.stringify(developerEncoding);",
-                  "",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json',",
-                  "    method: 'POST',",
-                  "    header: {",
-                  "              'authorization': 'Basic ' + developerBase64,",
-                  "              'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ ",
-                  "            firstName: \"initialFirstName\", ",
-                  "            lastName: \"initialLastName\", ",
-                  "            email: pm.environment.get(\"email\"), ",
-                  "            desiredPassword: pm.environment.get(\"password\"), ",
-                  "            organization: \"initialOrganization\",",
-                  "            group: \"sme\",",
-                  "            businessAddress: { countryId: \"CA\" }",
-                  "            } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    pm.environment.set(\"id\", res.json().id);",
-                  "    console.log(\"Email: \" + pm.environment.get(\"email\"));",
-                  "    console.log(\"User ID: \" + pm.environment.get(\"id\"));",
-                  "    ",
-                  "    let authString = pm.environment.get(\"email\") + \":\" + pm.environment.get(\"password\");",
-                  "    console.log(\"Auth String: \" + authString);",
-                  "    const encoding = CryptoJS.enc.Utf8.parse(authString);",
-                  "    const base64 = CryptoJS.enc.Base64.stringify(encoding);",
-                  "    pm.environment.set(\"authorization\", base64);",
-                  "    console.log(\"Base64 Encoding: \" + base64);",
-                  "});"
+                  "// Set the session ID",
+                  "console.log(\"setting session ID to: \" + postman.getResponseCookie(\"sessionId\").value);",
+                  "pm.environment.set(\"session_id\", postman.getResponseCookie(\"sessionId\").value);"
                 ],
                 "type": "text/javascript"
               }
@@ -93,7 +55,7 @@
                 "description": "Base64 encoding of user name and password required by basic authentication.",
                 "key": "Authorization",
                 "type": "text",
-                "value": "Basic {{authorization}}"
+                "value": "Basic {{initial_authorization}}"
               }
             ],
             "url": "{{url}}/service/dig",
@@ -103,6 +65,24 @@
         },
         {
           "name": "API Key and Secret Authentication",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "ff670323-d0dc-411a-b9a5-973b25943016",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// Clearing postman cookies",
+                  "clearCookies();",
+                  "",
+                  "// Create initial user",
+                  "createSmeUser('api_key');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "_postman_id": "05aae7bf-c9b0-4aca-bfac-ddc7fed21392",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -117,7 +97,7 @@
                 "description": "Base64 encoding of API key and secrets  required by basic authentication.",
                 "key": "Authorization",
                 "type": "text",
-                "value": "Basic {{authorization}}"
+                "value": "Basic {{api_key_authorization}}"
               }
             ],
             "url": "{{url}}/service/dig",
@@ -202,11 +182,10 @@
               "script": {
                 "id": "aedb3863-2e58-483d-8bb7-e842a6b01ce8",
                 "exec": [
-                  "// Set a random email address to create",
-                  "let emailAddress = \"ablii\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\"",
-                  "pm.environment.set(\"user_email\", emailAddress);",
-                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
-                  "pm.environment.set(\"user_password\", password);"
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "defineSmeUser(\"cu\");"
                 ],
                 "type": "text/javascript"
               }
@@ -216,73 +195,7 @@
               "script": {
                 "id": "f326459b-ba2c-437e-b97b-bdb155862a06",
                 "exec": [
-                  "var jsonData = pm.response.json();",
-                  "",
-                  "// retrieve the user ID",
-                  "let userId = jsonData.id;",
-                  "console.log(\"Created user with ID: \" + userId)",
-                  "pm.environment.set(\"user_id\", userId);",
-                  "",
-                  "// retrieve business user ID later",
-                  "let businessUserId = \"\";",
-                  "",
-                  "// Set the user credentials",
-                  "let authString = pm.environment.get(\"user_email\") + \":\" + pm.environment.get(\"user_password\");",
-                  "console.log(\"Auth String: \" + authString);",
-                  "const encoding = CryptoJS.enc.Utf8.parse(authString);",
-                  "const base64 = CryptoJS.enc.Base64.stringify(encoding);",
-                  "",
-                  "// Set the admin credentials",
-                  "let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
-                  "console.log(\"Admin Auth String: \" + adminAuthString);",
-                  "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
-                  "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
-                  "    ",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=select&format=json&q=email=' + pm.environment.get(\"user_email\") + '%20AND%type:Business',",
-                  "    method: 'GET',",
-                  "    header: {",
-                  "              'authorization': 'Basic ' + base64,",
-                  "              'content-type': 'application/json'",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    // retrieve business ID here instead of later on",
-                  "    businessUserId = res.json()[0].id;",
-                  "    pm.environment.set(\"user_business_id\", businessUserId);",
-                  "    console.log(\"User Business ID: \" + pm.environment.get(\"user_business_id\"));",
-                  "    ",
-                  "    // Set the business as compliant and onboarded",
-                  "    pm.sendRequest({",
-                  "        url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=put&format=json',",
-                  "        method: 'PUT',",
-                  "        header: {",
-                  "                  'authorization': 'Basic ' + adminBase64,",
-                  "                  'content-type': 'application/json'",
-                  "        },",
-                  "        body: {",
-                  "            mode: 'raw',",
-                  "            raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2, onboarded: true, emailVerified: true } )",
-                  "        }",
-                  "    }, function (err, res) {",
-                  "        console.log(\"Set compliance status for business: \" + pm.environment.get(\"user_business_id\"));",
-                  "    });",
-                  "});",
-                  "",
-                  "// Set the user as compliant with a verified email",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=userDAO&cmd=put&format=json',",
-                  "    method: 'PUT',",
-                  "    header: {",
-                  "              'authorization': 'Basic ' + adminBase64,",
-                  "              'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: userId, compliance: 2, onboarded: true, emailVerified: true } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
-                  "});"
+                  ""
                 ],
                 "type": "text/javascript"
               }
@@ -296,7 +209,7 @@
             "method": "POST",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
@@ -305,7 +218,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{user_email}}\",\n    \"desiredPassword\": \"{{user_password}}\",\n    \"organization\": \"Sample Organization\",\n    \"group\": \"sme\",\n    \"businessAddress\": {\n    \t\"countryId\": \"CA\"\n    }\n}"
+              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{cu_email}}\",\n    \"desiredPassword\": \"{{cu_password}}\",\n    \"organization\": \"Sample Organization\",\n    \"group\": \"sme\",\n    \"businessAddress\": {\n    \t\"countryId\": \"CA\"\n    }\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json",
@@ -348,7 +261,7 @@
                 "exec": [
                   "// Test for email address",
                   "pm.test(\"Test Email Address Returned\", function () {",
-                  "    var emailAddress = pm.environment.get(\"user_email\"); ",
+                  "    var emailAddress = pm.environment.get(\"rau_email\"); ",
                   "    var jsonData = pm.response.json();",
                   "    data = jsonData.filter(function (d) {",
                   "      return (d.email === emailAddress);",
@@ -356,6 +269,19 @@
                   "    console.log(\"Found \" + data.length + \" users with \" + data[0].email + \" email address\");",
                   "    pm.expect(data[0].email).to.eql(emailAddress);",
                   "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "2ddc2b87-2e4b-418f-81aa-a7d42b17cdbe",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"rau\");"
                 ],
                 "type": "text/javascript"
               }
@@ -369,12 +295,18 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{rau_password}}",
+                "username": "{{rau_email}}"
               }
             },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=type:User",
               "host": [
@@ -421,7 +353,7 @@
                 "exec": [
                   "// Test for email address",
                   "pm.test(\"Test Email Address Returned\", function () {",
-                  "    var emailAddress = pm.environment.get(\"user_email\"); ",
+                  "    var emailAddress = pm.environment.get(\"rcu_email\"); ",
                   "    var jsonData = pm.response.json();",
                   "    data = jsonData.filter(function (d) {",
                   "      return (d.email === emailAddress);",
@@ -429,6 +361,19 @@
                   "    console.log(\"Found \" + data.length + \" users with \" + data[0].email + \" email address\");",
                   "    pm.expect(data[0].email).to.eql(emailAddress);",
                   "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b1e6625f-edd8-437d-9f37-7c0b2afa25d5",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"rcu\");"
                 ],
                 "type": "text/javascript"
               }
@@ -442,14 +387,20 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{rcu_password}}",
+                "username": "{{rcu_email}}"
               }
             },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=email={{user_email}}%20AND%type:User",
+              "raw": "{{url}}/service/dig?dao=userDAO&cmd=select&format=json&q=email={{rcu_email}}%20AND%type:User",
               "host": [
                 "{{url}}"
               ],
@@ -475,7 +426,7 @@
                 },
                 {
                   "key": "q",
-                  "value": "email={{user_email}}%20AND%type:User",
+                  "value": "email={{rcu_email}}%20AND%type:User",
                   "description": "The query parameter for retrieval requests."
                 }
               ]
@@ -492,7 +443,10 @@
               "script": {
                 "id": "e6c28186-a52e-4842-a878-295c12474e2f",
                 "exec": [
-                  "// Change the middle name to something random"
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"uu\");"
                 ],
                 "type": "text/javascript"
               }
@@ -502,7 +456,16 @@
               "script": {
                 "id": "0c4863a9-b502-4e7c-92ec-b57004f09f56",
                 "exec": [
-                  "// Check to see that the middle name was updated properly"
+                  "",
+                  "require('postman-collection');",
+                  "",
+                  "// Test for email address",
+                  "pm.test(\"Test Email Address Returned\", function () {",
+                  "    var emailAddress = pm.environment.get(\"uu_email\"); ",
+                  "    var jsonData = pm.response.json();",
+                  "    console.log(\"Found \" + jsonData.email + \" email address\");",
+                  "    pm.expect(jsonData.email).to.eql(emailAddress);",
+                  "});"
                 ],
                 "type": "text/javascript"
               }
@@ -516,23 +479,28 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{uu_password}}",
+                "username": "{{uu_email}}"
               }
             },
             "method": "PUT",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
                 "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"id\": {{user_id}},\n    \"enabled\": true,\n    \"firstName\": \"updatedFirstName\",\n    \"middleName\": \"updatedMiddleName\",\n    \"lastName\": \"updatedLastName\",\n    \"department\": \"\",\n    \"email\": \"{{user_email}}\",\n    \"language\": \"\",\n    \"timeZone\": \"\",\n    \"note\": \"\",\n    \"isPublic\": true,\n    \"jobTitle\": \"\",\n    \"twoFactorEnabled\": false,\n    \"phone\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"mobile\": {\n        \"verified\": false,\n        \"number\": \"\"\n    }\n}"
+              "raw": "{\n    \"id\": {{uu_user_id}},\n    \"enabled\": true,\n    \"firstName\": \"updatedFirstName\",\n    \"middleName\": \"updatedMiddleName\",\n    \"lastName\": \"updatedLastName\",\n    \"department\": \"\",\n    \"email\": \"{{uu_email}}\",\n    \"language\": \"\",\n    \"timeZone\": \"\",\n    \"note\": \"\",\n    \"isPublic\": true,\n    \"jobTitle\": \"\",\n    \"twoFactorEnabled\": false,\n    \"phone\": {\n        \"verified\": false,\n        \"number\": \"\"\n    },\n    \"mobile\": {\n        \"verified\": false,\n        \"number\": \"\"\n    }\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=userDAO&cmd=put&format=json",
@@ -583,51 +551,10 @@
               "script": {
                 "id": "0c0a4951-8883-435e-b4f5-7e937a131853",
                 "exec": [
-                  "// Set a random email address to create",
-                  "let emailAddress = \"todelete\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\";",
-                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
+                  "eval(pm.globals.get('postman-library'));",
                   "",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json',",
-                  "    method: 'POST',",
-                  "    header: {",
-                  "        'authorization': 'Basic ' + pm.environment.get(\"authorization\"),",
-                  "        'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ ",
-                  "            firstName: \"toDeleteFirstName\", ",
-                  "            lastName: \"toDeleteLastName\", ",
-                  "            email: emailAddress, ",
-                  "            desiredPassword: password, ",
-                  "            organization: \"toDeleteOrganization\",",
-                  "            group: \"sme\",",
-                  "            businessAddress: { countryId: \"CA\" }",
-                  "        } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    pm.environment.set(\"user_id_to_delete\", res.json().id);",
-                  "    console.log(\"Create User \" + pm.environment.get(\"user_id_to_delete\") + \" to delete...\");",
-                  "    ",
-                  "    // retrieve business ID to delete",
-                  "    let authString = emailAddress + \":\" + password;",
-                  "    console.log(\"Auth String: \" + authString);",
-                  "    const encoding = CryptoJS.enc.Utf8.parse(authString);",
-                  "    const base64 = CryptoJS.enc.Base64.stringify(encoding);",
-                  "    ",
-                  "    pm.sendRequest({",
-                  "        url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=select&format=json&q=email=' + emailAddress,",
-                  "        method: 'GET',",
-                  "        header: {",
-                  "                  'authorization': 'Basic ' + base64,",
-                  "                  'content-type': 'application/json'",
-                  "        }",
-                  "    }, function (err01, res01) {",
-                  "        pm.environment.set(\"business_id_to_delete\", res01.json()[0].id);",
-                  "        console.log(\"Business ID to Delete: \" + pm.environment.get(\"business_id_to_delete\"));",
-                  "    });",
-                  "});"
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"du\");"
                 ],
                 "type": "text/javascript"
               }
@@ -646,9 +573,15 @@
               }
             },
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{url}}/service/dig?dao=userDAO&cmd=remove&format=json&id={{user_id_to_delete}}",
+              "raw": "{{url}}/service/dig?dao=userDAO&cmd=remove&format=json&id={{du_user_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -674,7 +607,7 @@
                 },
                 {
                   "key": "id",
-                  "value": "{{user_id_to_delete}}",
+                  "value": "{{du_user_id}}",
                   "description": "The ID of the entity to be deleted in the DAO."
                 }
               ]
@@ -714,6 +647,21 @@
       "item": [
         {
           "name": "Retrieve All Businesses",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "fe3af0fb-2075-4995-87c6-aab5828a6583",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"rab\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "_postman_id": "d6c1a26e-720e-4fbf-82cf-62f23e79d7af",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -722,12 +670,18 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{rab_password}}",
+                "username": "{{rab_email}}"
               }
             },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{url}}/service/dig?dao=businessDAO&cmd=select&format=json",
               "host": [
@@ -771,6 +725,19 @@
                 ],
                 "type": "text/javascript"
               }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "6a5f8758-0c83-481a-acb9-c574b2354f3a",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"rcb\");"
+                ],
+                "type": "text/javascript"
+              }
             }
           ],
           "_postman_id": "448cccc8-36fe-40d1-93c9-1c07bb8a762b",
@@ -781,14 +748,20 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{rcb_password}}",
+                "username": "{{rcb_email}}"
               }
             },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=select&format=json&q=email={{user_email}}%20AND%type:Business",
+              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=select&format=json&q=email={{rcb_email}}%20AND%type:Business",
               "host": [
                 "{{url}}"
               ],
@@ -814,7 +787,7 @@
                 },
                 {
                   "key": "q",
-                  "value": "email={{user_email}}%20AND%type:Business",
+                  "value": "email={{rcb_email}}%20AND%type:Business",
                   "description": "The query parameter for retrieval requests."
                 }
               ]
@@ -831,7 +804,10 @@
               "script": {
                 "id": "42eef57e-7aca-4e9a-9d25-120e071787ed",
                 "exec": [
-                  "pm.cookies.clear();"
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"ub\");"
                 ],
                 "type": "text/javascript"
               }
@@ -845,14 +821,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{ub_password}}",
+                "username": "{{ub_email}}"
               }
             },
             "method": "PUT",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
@@ -867,10 +843,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"id\": {{user_business_id}},\n    \"enabled\": true,\n    \"organization\": \"Sample Organization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{user_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"Sample Organization\",\n    \"website\": \"\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\"\n}"
+              "raw": "{\n    \"id\": {{ub_business_id}},\n    \"enabled\": true,\n    \"organization\": \"Sample Organization\",\n    \"department\": \"updatedDepartment\",\n    \"email\": \"{{ub_email}}\",\n    \"type\": \"Business\",\n    \"businessName\": \"Sample Organization\",\n    \"website\": \"\",\n    \"businessTypeId\": 0,\n    \"businessSectorId\": 0,\n    \"businessRegistrationNumber\": \"\",\n    \"businessRegistrationAuthority\": \"\",\n    \"operatingBusinessName\": \"\",\n    \"holdingCompany\": false,\n    \"thirdParty\": false,\n    \"targetCustomers\": \"\",\n    \"sourceOfFunds\": \"\",\n    \"taxIdentificationNumber\": \"\"\n}"
             },
             "url": {
-              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=put&format=json&actAs={{user_business_id}}",
+              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=put&format=json&actAs={{ub_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -896,7 +872,7 @@
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "{{ub_business_id}}",
                   "description": "The business on behalf of which the user acts. "
                 }
               ]
@@ -913,7 +889,10 @@
               "script": {
                 "id": "41052218-2930-46de-b7a1-c9807ec92c8d",
                 "exec": [
-                  ""
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"db\");"
                 ],
                 "type": "text/javascript"
               }
@@ -932,9 +911,15 @@
               }
             },
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "sessionId=",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=remove&format=json&id={{business_id_to_delete}}",
+              "raw": "{{url}}/service/dig?dao=businessDAO&cmd=remove&format=json&id={{db_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -960,7 +945,7 @@
                 },
                 {
                   "key": "id",
-                  "value": "{{business_id_to_delete}}",
+                  "value": "{{db_business_id}}",
                   "description": "The ID of the entity to be deleted in the DAO."
                 }
               ]
@@ -1006,8 +991,15 @@
               "script": {
                 "id": "33c8dd97-d43d-413f-babd-b5f99de8b734",
                 "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"cua\", function(p) {",
+                  "    verifyUserEmail(p);",
+                  "});",
+                  "",
                   "// Set a random email address to create",
-                  "let accountNumber = Math.floor(1000000 * Math.random())",
+                  "let accountNumber = 100000000 + Math.floor(1000000 * Math.random())",
                   "pm.environment.set(\"account_number\", accountNumber);",
                   "let accountName = \"CAD Checking \" + accountNumber",
                   "pm.environment.set(\"account_name\", accountName);"
@@ -1020,35 +1012,12 @@
               "script": {
                 "id": "945fe0c8-ac38-4539-af1c-9c28443e0018",
                 "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
                   "let jsonData = pm.response.json();",
                   "let accountId = jsonData.id;",
                   "console.log(\"Created account with ID: \" + accountId)",
-                  "pm.environment.set(\"account_id\", accountId);",
-                  "",
-                  "// Set the admin credentials",
-                  "let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
-                  "console.log(\"Admin Auth String: \" + adminAuthString);",
-                  "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
-                  "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
-                  "",
-                  "pm.cookies.clear();",
-                  "",
-                  "// Set the account as compliant and onboarded",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=accountDAO&cmd=put&format=json',",
-                  "    method: 'PUT',",
-                  "    header: {",
-                  "              'authorization': 'Basic ' + adminBase64,",
-                  "              'content-type': 'application/json',",
-                  "              'Cookie': 'sessionId='",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ class: \"net.nanopay.bank.CABankAccount\", id: accountId, status: 1, compliance: 2 } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    console.log(\"Set compliance status for account: \" + accountId);",
-                  "});"
+                  "pm.environment.set(\"cua_account_id\", accountId);"
                 ],
                 "type": "text/javascript"
               }
@@ -1062,14 +1031,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{cua_password}}",
+                "username": "{{cua_email}}"
               }
             },
             "method": "POST",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
@@ -1078,7 +1047,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 10,\n    \"country\": \"\",\n    \"accountNumber\": \"{{account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"4\",\n        \"streetName\": \"River\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N1N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\"\n    },\n    \"enabled\": true,\n    \"name\": \"{{account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"institution\": 24,\n    \"owner\": {{user_id}},\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"333\"\n}"
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 10,\n    \"country\": \"\",\n    \"accountNumber\": \"{{account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"4\",\n        \"streetName\": \"River\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N1N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\"\n    },\n    \"enabled\": true,\n    \"name\": \"{{account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"institution\": 24,\n    \"owner\": {{cua_user_id}},\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"333\"\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json",
@@ -1119,10 +1088,13 @@
               "script": {
                 "id": "8d7ea0a4-55d1-4c98-8280-ce20f48e0583",
                 "exec": [
-                  "pm.cookies.clear();",
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"cba\");",
                   "",
                   "// Set a random email address to create",
-                  "let accountNumber = Math.floor(1000000 * Math.random())",
+                  "let accountNumber = 100000000 + Math.floor(1000000 * Math.random())",
                   "pm.environment.set(\"business_account_number\", accountNumber);",
                   "let accountName = \"CAD Checking \" + accountNumber",
                   "pm.environment.set(\"business_account_name\", accountName);"
@@ -1135,32 +1107,12 @@
               "script": {
                 "id": "8891c9b4-c9ff-4b7f-a875-833002e23263",
                 "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
                   "let jsonData = pm.response.json();",
                   "let businessAccountId = jsonData.id;",
                   "console.log(\"Created business account with ID: \" + businessAccountId)",
-                  "pm.environment.set(\"business_account_id\", businessAccountId);",
-                  "",
-                  "// Set the admin credentials",
-                  "let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
-                  "console.log(\"Admin Auth String: \" + adminAuthString);",
-                  "const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
-                  "const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
-                  "    ",
-                  "// Set the account as compliant and onboarded",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=accountDAO&cmd=put&format=json',",
-                  "    method: 'PUT',",
-                  "    header: {",
-                  "              'authorization': 'Basic ' + adminBase64,",
-                  "              'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ class: \"net.nanopay.bank.CABankAccount\", id: businessAccountId, status: 1, compliance: 2 } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    console.log(\"Set compliance status for account: \" + businessAccountId);",
-                  "});"
+                  "pm.environment.set(\"business_account_id\", businessAccountId);"
                 ],
                 "type": "text/javascript"
               }
@@ -1174,14 +1126,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{cba_password}}",
+                "username": "{{cba_email}}"
               }
             },
             "method": "POST",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
@@ -1196,10 +1148,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 5,\n    \"country\": \"\",\n    \"accountNumber\": \"{{business_account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"12\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N2N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"\",\n        \"regionId\": \"\",\n        \"streetNumber\": \"\",\n        \"streetName\": \"\",\n        \"suite\": \"\",\n        \"city\": \"\",\n        \"postalCode\": \"\"\n    },\n    \"enabled\": true,\n    \"name\": \"{{business_account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"balance\": 0,\n    \"institution\": 16,\n    \"owner\": {{user_business_id}},\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"333\"\n}"
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"branch\": 5,\n    \"country\": \"\",\n    \"accountNumber\": \"{{business_account_number}}\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"12\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N2N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"\",\n        \"regionId\": \"\",\n        \"streetNumber\": \"\",\n        \"streetName\": \"\",\n        \"suite\": \"\",\n        \"city\": \"\",\n        \"postalCode\": \"\"\n    },\n    \"enabled\": true,\n    \"name\": \"{{business_account_name}}\",\n    \"desc\": \"\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"balance\": 0,\n    \"institution\": 16,\n    \"owner\": {{cba_business_id}},\n    \"branchId\": \"12345\",\n    \"institutionNumber\": \"333\"\n}"
             },
             "url": {
-              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json&actAs={{user_business_id}}",
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json&actAs={{cba_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1225,7 +1177,7 @@
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "{{cba_business_id}}",
                   "description": "The business on behalf of which the user acts. "
                 }
               ]
@@ -1243,10 +1195,11 @@
                 "id": "8cc877b5-962a-4756-be9b-521303c0c499",
                 "exec": [
                   "var jsonData = pm.response.json();",
-                  "data = jsonData.filter(function (d) {",
+                  "/*data = jsonData.filter(function (d) {",
                   "  return (d.class === \"net.nanopay.bank.CABankAccount\");",
-                  "});",
-                  "console.log(\"Found \" + data.length + \" Canadian bank accounts. First one is named \" + data[0].name + \" and ID \" + data[0].id);",
+                  "});*/",
+                  "data = jsonData;",
+                  "console.log(\"Found \" + data.length + \" accounts. First one is ID \" + data[0].id);",
                   "",
                   "// Set the user ID",
                   "// pm.environment.set(\"account_id\", data[0].id); // this is done in the create request"
@@ -1263,8 +1216,8 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{cba_password}}",
+                "username": "{{cba_email}}"
               }
             },
             "method": "GET",
@@ -1310,14 +1263,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{cua_password}}",
+                "username": "{{cua_email}}"
               }
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=select&format=json&q=owner={{user_id}}",
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=select&format=json&q=owner={{cua_user_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1343,7 +1296,7 @@
                 },
                 {
                   "key": "q",
-                  "value": "owner={{user_id}}",
+                  "value": "owner={{cua_user_id}}",
                   "description": "The query parameter for retrieval requests."
                 },
                 {
@@ -1368,14 +1321,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{cba_password}}",
+                "username": "{{cba_email}}"
               }
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=select&format=json&actAs={{user_business_id}}&q=owner={{user_business_id}}",
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=select&format=json&actAs={{cba_business_id}}&q=owner={{cba_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1401,12 +1354,12 @@
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "{{cba_business_id}}",
                   "description": "The business on behalf of which the user acts. "
                 },
                 {
                   "key": "q",
-                  "value": "owner={{user_business_id}}",
+                  "value": "owner={{cba_business_id}}",
                   "description": "The query parameter for retrieval requests."
                 }
               ]
@@ -1417,6 +1370,21 @@
         },
         {
           "name": "Update Account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "fbac9f5b-9376-4908-a867-8542e962cb19",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"uba\", createAccount);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "_postman_id": "8621ec21-fd34-4acb-8507-281c395d5979",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -1425,14 +1393,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{uba_password}}",
+                "username": "{{uba_email}}"
               }
             },
             "method": "PUT",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
@@ -1441,10 +1409,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"id\": {{account_id}},\n    \"branch\": 12,\n    \"country\": \"\",\n    \"status\": 1,\n    \"denomination\": \"CAD\",\n    \"verificationAttempts\": 0,\n    \"microVerificationTimestamp\": \"2019-02-11T21:50:04.329Z\",\n    \"integrationId\": \"\",\n    \"address\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"4\",\n        \"streetName\": \"River\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"N1N1N1\"\n    },\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\"\n    },\n    \"enabled\": true,\n    \"desc\": \"Updated description\",\n    \"transferIn\": true,\n    \"transferOut\": true,\n    \"isDefault\": true,\n    \"owner\": {{user_id}},\n    \"institution\": 24\n}"
+              "raw": "{\n    \"class\": \"net.nanopay.bank.CABankAccount\",\n    \"id\": {{uba_account_id}},\n    \"bankAddress\": {\n        \"verified\": false,\n        \"countryId\": \"CA\",\n        \"regionId\": \"ON\",\n        \"streetNumber\": \"23\",\n        \"streetName\": \"Bank\",\n        \"suite\": \"\",\n        \"city\": \"Toronto\",\n        \"postalCode\": \"M2N1M2\"\n    },\n    \"desc\": \"Updated description\",\n    \"owner\": {{uba_business_id}}\n}"
             },
             "url": {
-              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json",
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=put&format=json&actAs={{uba_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1467,6 +1435,10 @@
                   "key": "format",
                   "value": "json",
                   "description": "The format of the response."
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{uba_business_id}}"
                 }
               ]
             },
@@ -1482,131 +1454,10 @@
               "script": {
                 "id": "bf0da891-a367-4397-b45e-eba939c89c10",
                 "exec": [
-                  "// Set a random email address to create",
-                  "let emailAddress = \"todelete\" + Math.floor(1000000 * Math.random()) + \"@nanopay.net\";",
-                  "let password = \"password\" + Math.floor(1000000 * Math.random()) + \"#\";",
+                  "eval(pm.globals.get('postman-library'));",
                   "",
-                  "pm.environment.set(\"user_email_account_delete\", emailAddress)",
-                  "pm.environment.set(\"user_password_account_delete\", password)",
-                  "",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json',",
-                  "    method: 'POST',",
-                  "    header: {",
-                  "        'authorization': 'Basic ' + pm.environment.get(\"authorization\"),",
-                  "        'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ ",
-                  "            firstName: \"toDeleteFirstName\", ",
-                  "            lastName: \"toDeleteLastName\", ",
-                  "            email: emailAddress, ",
-                  "            desiredPassword: password, ",
-                  "            organization: \"toDeleteOrganization\",",
-                  "            group: \"sme\",",
-                  "            businessAddress: { countryId: \"CA\" }",
-                  "        } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    pm.environment.set(\"user_id_to_delete\", res.json().id);",
-                  "    console.log(\"Create User \" + pm.environment.get(\"user_id_to_delete\") + \" for account delete...\");",
-                  "    ",
-                  "    // Set the admin credentials",
-                  "    let adminAuthString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
-                  "    console.log(\"Admin Auth String: \" + adminAuthString);",
-                  "    const adminEncoding = CryptoJS.enc.Utf8.parse(adminAuthString);",
-                  "    const adminBase64 = CryptoJS.enc.Base64.stringify(adminEncoding);",
-                  "",
-                  "    // Set the user as compliant with a verified email",
-                  "    pm.sendRequest({",
-                  "        url: pm.environment.get(\"url\") + '/service/dig?dao=userDAO&cmd=put&format=json',",
-                  "        method: 'PUT',",
-                  "        header: {",
-                  "                  'authorization': 'Basic ' + adminBase64,",
-                  "                  'content-type': 'application/json'",
-                  "        },",
-                  "        body: {",
-                  "            mode: 'raw',",
-                  "            raw: JSON.stringify({ id: pm.environment.get(\"user_id_to_delete\"), compliance: 2, onboarded: true, emailVerified: true } )",
-                  "        }",
-                  "    }, function (err, res) {",
-                  "        console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id_to_delete\"))",
-                  "        ",
-                  "        let authString = emailAddress + \":\" + password;",
-                  "        const encoding = CryptoJS.enc.Utf8.parse(authString);",
-                  "        const base64 = CryptoJS.enc.Base64.stringify(encoding);",
-                  "        ",
-                  "        let userAccountNumber = Math.floor(5000000 * Math.random()) + \"\";",
-                  "        let userAccountName = \"CAD Deleting \" + userAccountNumber;",
-                  "        let userId = pm.environment.get(\"user_id_to_delete\");",
-                  "        ",
-                  "        pm.sendRequest({",
-                  "            url: pm.environment.get(\"url\") + '/service/dig?dao=accountDAO&cmd=put&format=json',",
-                  "            method: 'POST',",
-                  "            header: {",
-                  "                      'authorization': 'Basic ' + base64,",
-                  "                      'content-type': 'application/json'",
-                  "            },",
-                  "            body: {",
-                  "                mode: 'raw',",
-                  "                raw: JSON.stringify(",
-                  "                    {",
-                  "                        class: \"net.nanopay.bank.CABankAccount\",",
-                  "                        branch: 10,",
-                  "                        branchId: \"12345\",",
-                  "                        institutionNumber: \"323\",",
-                  "                        country: \"\",",
-                  "                        accountNumber: userAccountNumber,",
-                  "                        status: 1,",
-                  "                        denomination: \"CAD\",",
-                  "                        verificationAttempts: 0,",
-                  "                        integrationId: \"\",",
-                  "                        address: {",
-                  "                            type: \"\",",
-                  "                            structured: true,",
-                  "                            countryId: \"CA\",",
-                  "                            regionId: \"ON\",",
-                  "                            streetNumber: \"4\",",
-                  "                            streetName: \"River\",",
-                  "                            city: \"Toronto\",",
-                  "                            postalCode: \"N1N1N1\",",
-                  "                            encrypted: false,",
-                  "                            latitude: 0,",
-                  "                            longitude: 0",
-                  "                        },",
-                  "                        bankAddress: {",
-                  "                            verified: false,",
-                  "                            structured: true,",
-                  "                            countryId: \"CA\",",
-                  "                            regionId: \"ON\",",
-                  "                            streetNumber: \"23\",",
-                  "                            streetName: \"Bank\",",
-                  "                            city: \"Toronto\",",
-                  "                            postalCode: \"M2N1M2\",",
-                  "                            encrypted: false,",
-                  "                            latitude: 0,",
-                  "                            longitude: 0",
-                  "                        },",
-                  "                        enabled: true,",
-                  "                        name: userAccountName,",
-                  "                        desc: \"\",",
-                  "                        transferIn: true,",
-                  "                        transferOut: true,",
-                  "                        isDefault: true,",
-                  "                        balance: 0,",
-                  "                        institution: 24,",
-                  "                        owner: userId",
-                  "                    } )",
-                  "            }",
-                  "        }, function (err, res) {",
-                  "            pm.environment.set(\"account_id_to_delete\", res.json().id);",
-                  "            console.log(\"Created account to delete: \" + pm.environment.get(\"account_id_to_delete\"));",
-                  "        });",
-                  "    });",
-                  "});",
-                  "",
-                  ""
+                  "// setup the email and password for a user",
+                  "createSmeUser(\"dba\", createAccount);"
                 ],
                 "type": "text/javascript"
               }
@@ -1620,14 +1471,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password_account_delete}}",
-                "username": "{{user_email_account_delete}}"
+                "password": "{{admin_password}}",
+                "username": "{{admin_email}}"
               }
             },
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=remove&format=json&id={{account_id_to_delete}}",
+              "raw": "{{url}}/service/dig?dao=accountDAO&cmd=remove&format=json&id={{dba_account_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1653,7 +1504,7 @@
                 },
                 {
                   "key": "id",
-                  "value": "{{account_id_to_delete}}",
+                  "value": "{{dba_account_id}}",
                   "description": "The ID of the entity to be deleted in the DAO."
                 }
               ]
@@ -1693,6 +1544,22 @@
       "item": [
         {
           "name": "Create Partner Connection",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "294cf72e-d9df-4c07-8616-53473d4968de",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for two partners",
+                  "createSmeUser(\"partneri\", createAccount);",
+                  "createSmeUser(\"partnerii\", createAccount);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "_postman_id": "80f3130e-8e51-497a-b63d-1a8c295a57f4",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -1701,26 +1568,31 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{partneri_password}}",
+                "username": "{{partneri_email}}"
               }
             },
             "method": "POST",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
                 "value": "application/json"
+              },
+              {
+                "key": "cookie",
+                "value": "sessionId=",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"sourceId\": {{id}},\n    \"targetId\": {{user_id}},\n    \"partnerId\": {{id}},\n    \"yourId\": {{user_id}}\n}"
+              "raw": "{\n    \"sourceId\": {{partneri_business_id}},\n    \"targetId\": {{partnerii_business_id}},\n    \"yourId\": {{partneri_business_id}},\n    \"partnerId\": {{partnerii_business_id}},\n    \n}"
             },
             "url": {
-              "raw": "{{url}}/service/dig?dao=partnerJunctionDAO&cmd=put&format=json",
+              "raw": "{{url}}/service/dig?dao=partnerJunctionDAO&cmd=put&format=json&actAs={{partneri_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1743,6 +1615,10 @@
                   "key": "format",
                   "value": "json",
                   "description": "The format of the response. "
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{partneri_business_id}}"
                 }
               ]
             },
@@ -1760,14 +1636,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{partneri_password}}",
+                "username": "{{partneri_email}}"
               }
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/dig?dao=partnerJunctionDAO&cmd=select&format=json",
+              "raw": "{{url}}/service/dig?dao=partnerJunctionDAO&cmd=select&format=json&actAs={{partneri_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1790,6 +1666,10 @@
                   "key": "format",
                   "value": "json",
                   "description": "The format of the response."
+                },
+                {
+                  "key": "actAs",
+                  "value": "{{partneri_business_id}}"
                 }
               ]
             },
@@ -1807,14 +1687,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{partneri_password}}",
+                "username": "{{partneri_email}}"
               }
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/dig?dao=publicUserDAO&cmd=select&format=json&q=id>8000",
+              "raw": "{{url}}/service/dig?dao=publicUserDAO&cmd=select&format=json",
               "host": [
                 "{{url}}"
               ],
@@ -1841,7 +1721,8 @@
                 {
                   "key": "q",
                   "value": "id>8000",
-                  "description": "The query parameter for retrieval requests."
+                  "description": "The query parameter for retrieval requests.",
+                  "disabled": true
                 }
               ]
             },
@@ -1898,6 +1779,36 @@
                 ],
                 "type": "text/javascript"
               }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "59d90895-9dea-485b-b9e7-a478f18e9fe6",
+                "exec": [
+                  "eval(pm.globals.get('postman-library'));",
+                  "",
+                  "// setup the email and password for two partners",
+                  "createSmeUser(\"civ\", function(p) {",
+                  "    verifyUserCompliance(p, function(r) {",
+                  "        verifyBusinessCompliance(r, function(e) {",
+                  "            createAccount(e, function(f) {",
+                  "              verifyAccountCompliance(e);  ",
+                  "            })",
+                  "        })",
+                  "    })",
+                  "});",
+                  "createSmeUser(\"civn\", function(p) {",
+                  "    verifyUserCompliance(p, function(r) {",
+                  "        verifyBusinessCompliance(r, function(e) {",
+                  "            createAccount(e, function(f) {",
+                  "              verifyAccountCompliance(e);  ",
+                  "            })",
+                  "        })",
+                  "    })",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
             }
           ],
           "_postman_id": "970cd5fd-452f-4da1-9abe-4ee5505eec05",
@@ -1908,14 +1819,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{civ_password}}",
+                "username": "{{civ_email}}"
               }
             },
             "method": "POST",
             "header": [
               {
-                "description": "JSON body content",
+                "description": "JSON body content.",
                 "key": "Content-Type",
                 "name": "Content-Type",
                 "type": "text",
@@ -1924,10 +1835,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n\t\"name\":\"testInvoice\", \n\t\"account\":{{business_account_id}}, \n\t\"destinationAccount\":{{account_id}}, \n\t\"amount\":11111, \n\t\"payerId\":{{user_business_id}},\n\t\"payeeId\": {{user_id}}, \n\t\"destinationCurrency\":\"CAD\"\n}"
+              "raw": "{\n\t\"name\":\"testInvoice\", \n\t\"account\":{{civ_account_id}}, \n\t\"destinationAccount\":{{cinv_account_id}}, \n\t\"amount\":11111, \n\t\"payerId\":{{civ_business_id}},\n\t\"payeeId\": {{cinv_business_id}}, \n\t\"destinationCurrency\":\"CAD\"\n}"
             },
             "url": {
-              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=put&format=json&actAs={{user_business_id}}",
+              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=put&format=json&actAs={{civ_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -1953,7 +1864,7 @@
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "{{civ_business_id}}",
                   "description": "The business on behalf of which the user acts. "
                 }
               ]
@@ -1972,14 +1883,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{civ_password}}",
+                "username": "{{civ_email}}"
               }
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=select&format=json&actAs={{user_business_id}}",
+              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=select&format=json&actAs={{civ_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -2005,7 +1916,7 @@
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "{{civ_business_id}}",
                   "description": "The business on behalf of which the user acts. "
                 }
               ]
@@ -2024,14 +1935,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{civ_password}}",
+                "username": "{{civ_email}}"
               }
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=select&format=json&actAs={{user_business_id}}&q=id={{invoice_id}}",
+              "raw": "{{url}}/service/dig?dao=invoiceDAO&cmd=select&format=json&actAs={{civ_business_id}}&q=id={{invoice_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -2057,7 +1968,7 @@
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "{{civ_business_id}}",
                   "description": "The business on behalf of which the user acts. "
                 },
                 {
@@ -2077,40 +1988,34 @@
             {
               "listen": "prerequest",
               "script": {
-                "id": "38761039-4f19-4a5c-83e7-3a6975175c78",
+                "id": "026a537a-e6aa-44a0-ab71-546433d46ab6",
                 "exec": [
-                  "let authString = pm.environment.get(\"admin_email\") + \":\" + pm.environment.get(\"admin_password\");",
-                  "const encoding = CryptoJS.enc.Utf8.parse(authString);",
-                  "const base64 = CryptoJS.enc.Base64.stringify(encoding);",
+                  "eval(pm.globals.get('postman-library'));",
                   "",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=userDAO&cmd=put&format=json',",
-                  "    method: 'PUT',",
-                  "    header: {",
-                  "              'authorization': 'Basic ' + base64,",
-                  "              'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_id\"), compliance: 2, onboarded: true, emailVerified: true } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    console.log(\"Set compliance status for user: \" + pm.environment.get(\"user_id\"));",
-                  "});",
+                  "let sourcePrefix = \"piv\";",
+                  "let destPrefix = \"pivd\"",
                   "",
-                  "pm.sendRequest({",
-                  "    url: pm.environment.get(\"url\") + '/service/dig?dao=businessDAO&cmd=put&format=json',",
-                  "    method: 'PUT',",
-                  "    header: {",
-                  "              'authorization': 'Basic ' + base64,",
-                  "              'content-type': 'application/json'",
-                  "    },",
-                  "    body: {",
-                  "        mode: 'raw',",
-                  "        raw: JSON.stringify({ id: pm.environment.get(\"user_business_id\"), compliance: 2, onboarded: true, emailVerified: true } )",
-                  "    }",
-                  "}, function (err, res) {",
-                  "    console.log(\"Set compliance status for business: \" + pm.environment.get(\"user_business_id\"));",
+                  "// setup the email and password for two partners",
+                  "createSmeUser(sourcePrefix, function(prefix) {",
+                  "    verifyUserCompliance(sourcePrefix, function(prefix) {",
+                  "        verifyBusinessCompliance(sourcePrefix, function(prefix) {",
+                  "            createAccount(sourcePrefix, function(prefix) {",
+                  "                verifyAccountCompliance(sourcePrefix, function(prefix) {",
+                  "                    createSmeUser(destPrefix, function(prefix) {",
+                  "                        verifyUserCompliance(destPrefix, function(prefix) {",
+                  "                            verifyBusinessCompliance(destPrefix, function(prefix) {",
+                  "                                createAccount(destPrefix, function(prefix) {",
+                  "                                    verifyAccountCompliance(destPrefix, function(prefix) {",
+                  "                                        createInvoice(sourcePrefix, destPrefix);",
+                  "                                    }) ",
+                  "                                })",
+                  "                            })",
+                  "                         })",
+                  "                    })",
+                  "                }) ",
+                  "            })",
+                  "        })",
+                  "    })",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -2119,7 +2024,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "7be4ad47-ce7b-4f9d-98b9-62a196a7b825",
+                "id": "57797ecd-3650-4a8d-be16-66ae13ca9b5e",
                 "exec": [
                   "var jsonData = pm.response.json();",
                   "console.log(\"Submitted invoice with ID: \" + jsonData.id + \" for payment\")",
@@ -2142,14 +2047,14 @@
             "auth": {
               "type": "basic",
               "basic": {
-                "password": "{{user_password}}",
-                "username": "{{user_email}}"
+                "password": "{{piv_password}}",
+                "username": "{{piv_email}}"
               }
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId={{invoice_id}}&x=X&actAs={{user_business_id}}",
+              "raw": "{{url}}/service/sugar?service=invoicePaymentService&interfaceName=net.nanopay.invoice.service.InvoicePaymentService&method=pay&invoiceId={{piv_invoice_id}}&X=X&actAs={{piv_business_id}}",
               "host": [
                 "{{url}}"
               ],
@@ -2175,16 +2080,16 @@
                 },
                 {
                   "key": "invoiceId",
-                  "value": "{{invoice_id}}",
+                  "value": "{{piv_invoice_id}}",
                   "description": "The ID of the invoice being paid."
                 },
                 {
-                  "key": "x",
+                  "key": "X",
                   "value": "X"
                 },
                 {
                   "key": "actAs",
-                  "value": "{{user_business_id}}",
+                  "value": "{{piv_business_id}}",
                   "description": "The business on behalf of which the user acts. "
                 }
               ]
@@ -2720,7 +2625,27 @@
         "id": "fd22c28e-1a54-4b81-987f-64411d7e3edc",
         "type": "text/javascript",
         "exec": [
-          ""
+          "// Check if the postman library has to be updated",
+          "pm.sendRequest({",
+          "    url: 'https://s3.ca-central-1.amazonaws.com/postman-library/js/postman-library.js',",
+          "    method: 'HEAD'",
+          "}, function (err, res) {",
+          "    let lastModified = res.headers.get('Last-Modified');",
+          "    if (lastModified != pm.environment.get('postman-library-last-modified')) {",
+          "        // Update the postman library",
+          "        console.log('Updating postman-library.js: ' + lastModified);",
+          "        pm.sendRequest({",
+          "            url: 'https://s3.ca-central-1.amazonaws.com/postman-library/js/postman-library.js',",
+          "            method: 'GET'",
+          "        }, function (err, res) {",
+          "            let library = res.text();",
+          "            pm.globals.set('postman-library', library);",
+          "        })",
+          "        ",
+          "        // Set the last modified environment variable",
+          "        pm.environment.set('postman-library-last-modified', res.headers.get('Last-Modified'));",
+          "    }",
+          "})"
         ]
       }
     },
@@ -2740,7 +2665,7 @@
   ],
   "variable": [
     {
-      "id": "3c4d4b94-1f5d-4332-b634-75defd2bc7c5",
+      "id": "4b346db3-702a-4bfd-953a-248550834ee4",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
