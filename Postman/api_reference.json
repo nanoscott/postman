@@ -1797,7 +1797,7 @@
                   "        })",
                   "    })",
                   "});",
-                  "createSmeUser(\"civn\", function(p) {",
+                  "createSmeUser(\"cinv\", function(p) {",
                   "    verifyUserCompliance(p, function(r) {",
                   "        verifyBusinessCompliance(r, function(e) {",
                   "            createAccount(e, function(f) {",
@@ -3094,7 +3094,7 @@
   ],
   "variable": [
     {
-      "id": "5c159223-e9e2-4f27-af18-20e48e830a5f",
+      "id": "2aa2fa04-540a-4a92-a89b-d406db55469a",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
