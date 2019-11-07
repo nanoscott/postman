@@ -2321,6 +2321,13 @@
             "disableBodyPruning": true
           },
           "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{developer_password}}",
+                "username": "tester@nanopay.net"
+              }
+            },
             "method": "GET",
             "header": [],
             "url": {
@@ -3101,7 +3108,7 @@
   ],
   "variable": [
     {
-      "id": "c0bd5b0f-d20e-4304-8184-9db0cbe3f21b",
+      "id": "d76387bf-3ec3-4edb-8a12-1268f1c50764",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
