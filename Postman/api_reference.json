@@ -218,7 +218,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{cu_email}}\",\n    \"desiredPassword\": \"{{cu_password}}\",\n    \"organization\": \"Sample Organization\",\n    \"group\": \"sme\",\n    \"businessAddress\": {\n    \t\"countryId\": \"CA\"\n    }\n}"
+              "raw": "{\n    \"firstName\": \"firstName\",\n    \"middleName\": \"\",\n    \"lastName\": \"lastName\",\n    \"email\": \"{{cu_email}}\",\n    \"desiredPassword\": \"{{cu_password}}\",\n    \"organization\": \"Sample Organization\",\n    \"group\": \"sme\",\n    \"address\": {\n    \t\"countryId\": \"CA\"\n    }\n}"
             },
             "url": {
               "raw": "{{url}}/service/dig?dao=smeBusinessRegistrationDAO&cmd=put&format=json",
@@ -2171,6 +2171,13 @@
             "disableBodyPruning": true
           },
           "request": {
+            "auth": {
+              "type": "basic",
+              "basic": {
+                "password": "{{developer_password}}",
+                "username": "tester@nanopay.net"
+              }
+            },
             "method": "GET",
             "header": [],
             "url": {
@@ -3094,7 +3101,7 @@
   ],
   "variable": [
     {
-      "id": "5ee82fef-2bd7-4b39-b97b-1fbb6ba736c7",
+      "id": "c0bd5b0f-d20e-4304-8184-9db0cbe3f21b",
       "key": "url",
       "value": "http://localhost:8080/",
       "type": "string"
